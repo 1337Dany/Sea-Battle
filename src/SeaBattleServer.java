@@ -1,37 +1,41 @@
 import java.io.*;
 import java.net.*;
 
-public class SeaBattleServer{
-
-     SeaBattleServer(){
-
-    }
+public class SeaBattleServer {
     public static void main(String[] args) {
-        int port = 12345; // Порт для прослушивания
+        int port = 9999;
 
         try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Сервер запущен на порту " + port);
+            System.out.println("Waiting for client connection...");
 
-            // Ожидание подключения клиента
             Socket clientSocket = serverSocket.accept();
-            System.out.println("Клиент подключился: " + clientSocket.getInetAddress());
+            System.out.println("Client \"" + clientSocket.getInetAddress() + "\" connected succesfully.");
 
-            // Потоки для приема и отправки данных
+            //Data transmission streams
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
-            // Чтение сообщения от клиента
-            String receivedMessage = in.readLine();
-            System.out.println("Сообщение от клиента: " + receivedMessage);
+            new Thread(() -> {
+                try {
+                    String clientMessage;
+                    while ((clientMessage = in.readLine()) != null) {
+                        System.out.println("Client data: " + clientMessage);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
 
-            // Ответ клиенту
-            String serverMessage = "Привет от сервера через Wi-Fi!";
-            out.println(serverMessage);
+            // Sending message to user
+            String message;
+            while ((message = userInput.readLine()) != null) {
+                out.println(message);
+            }
 
-            // Закрытие соединения
-            clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 }
