@@ -20,6 +20,7 @@ public class MainMenu extends JFrame {
         mainMenu();
     }
 
+
     private void mainMenu() {
         JPanel menuPanel = new JPanel();
         drawMenu(menuPanel);

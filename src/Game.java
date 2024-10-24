@@ -3,7 +3,6 @@ import javax.swing.*;
 public class Game extends JPanel {
     Game(){
 
-
     }
     private void history(){}
     private void connection(){}

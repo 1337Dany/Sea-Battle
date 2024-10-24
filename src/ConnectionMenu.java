@@ -5,23 +5,24 @@ public class ConnectionMenu extends JPanel {
     JTextArea ip = new JTextArea();
     JButton connectButton = new JButton("Connect");
     JPanel menuPanel;
-
-    boolean ipCorrect = false;
+    ColorChangedThread colorChangedThread = new ColorChangedThread(ip,this);
 
     ConnectionMenu(JPanel menuPanel) {
         this.menuPanel = menuPanel;
-
+        colorChangedThread.start();
         drawPanel();
 
 
         connectButton.addActionListener(e -> {
-
+            connectToServer();
         });
 
 
     }
 
     private void connectToServer() {
+        colorChangedThread.interrupt();
+
 
     }
 
@@ -52,9 +53,9 @@ public class ConnectionMenu extends JPanel {
         ip.setFont(new Font(ip.getFont().getFontName(), Font.PLAIN, 40));
         ip.setOpaque(false);
         ip.setBounds(
-                this.getWidth() / 2 - (int) (text.getWidth()*0.8) / 2,
+                this.getWidth() / 2 - (int) (text.getWidth() * 0.8) / 2,
                 text.getY() + text.getHeight(),
-                (int) (text.getWidth()*0.8),
+                (int) (text.getWidth() * 0.8),
                 text.getHeight()
         );
 
@@ -87,7 +88,12 @@ public class ConnectionMenu extends JPanel {
         graphics2D.setColor(Color.ORANGE);
         graphics2D.drawRoundRect(0, 0, this.getWidth(), this.getHeight(), arc, arc);
 
-        graphics2D.setColor(Color.ORANGE);
-        graphics2D.drawRoundRect((int) (ip.getX() * 0.55), (int) (ip.getY() * 0.93), (int) (ip.getWidth() / 0.9), (int) (ip.getHeight() / 0.8),30,30);
+        if (colorChangedThread.ipCorrect) {
+            graphics2D.setColor(Color.GREEN);
+        } else {
+            graphics2D.setColor(Color.RED);
+        }
+
+        graphics2D.drawRoundRect((int) (ip.getX() * 0.55), (int) (ip.getY() * 0.93), (int) (ip.getWidth() / 0.9), (int) (ip.getHeight() / 0.8), 30, 30);
     }
 }
