@@ -36,7 +36,6 @@ public class FrameScalability {
                     } catch (FontFormatException | IOException ex) {
                         throw new RuntimeException(ex);
                     }
-                    System.out.println(stabilisableComponent.getComponent().getFont().getSize());
                 }
             }
         });
@@ -45,7 +44,7 @@ public class FrameScalability {
 
     public static void updateComponents(Component component) {
         //  There we're checking all the components in frame recursively by components and change the font size by deriving
-        if (component instanceof JButton || component instanceof JLabel || component instanceof JPanel) {
+        if (component instanceof JButton || component instanceof JLabel || component instanceof JPanel || component instanceof JTextArea) {
             stabilizedComponents.add(new StabilisableComponent(component));
         }
         for (Component child : ((Container) component).getComponents()) {
