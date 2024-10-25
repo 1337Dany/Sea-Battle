@@ -8,6 +8,8 @@ public class ConnectionMenu extends JPanel {
     ConnectionThread connectionThread = new ConnectionThread(ip,this);
     SeaBattleClientOne seaBattleClientOne = new SeaBattleClientOne();
 
+    static boolean isConnected = false;
+
     ConnectionMenu(JPanel menuPanel) {
         this.menuPanel = menuPanel;
         connectionThread.start();

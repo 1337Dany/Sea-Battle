@@ -1,7 +1,12 @@
 import javax.swing.*;
 
 public class Game extends JPanel {
-    Game(){
+    GameField myField = new GameField();
+    GameField enemyProjection = new GameField();
+
+    Game() {
+        this.setLayout(null);
+        this.add(myField);
 
     }
     private void history(){}

@@ -26,12 +26,18 @@ public class MainMenu extends JFrame {
 
         host.addActionListener(e -> {
             this.remove(menuPanel);
-            new SeaBattleServer();
+            SeaBattleServer seaBattleServer = new SeaBattleServer();
+            Game game = new Game(seaBattleServer);
         });
 
         connect.addActionListener(e -> {
             menuPanel.add(new ConnectionMenu(menuPanel), BorderLayout.EAST);
             repaint();
+            SeaBattleClientOne seaBattleClientOne = new SeaBattleClientOne();
+            if (ConnectionMenu.isConnected) {
+                Game game = new Game(seaBattleClientOne);
+                this.add(game);
+            }
         });
 
         exit.addActionListener(e -> System.exit(0));
