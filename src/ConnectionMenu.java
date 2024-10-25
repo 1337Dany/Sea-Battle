@@ -5,11 +5,12 @@ public class ConnectionMenu extends JPanel {
     JTextArea ip = new JTextArea();
     JButton connectButton = new JButton("Connect");
     JPanel menuPanel;
-    ColorChangedThread colorChangedThread = new ColorChangedThread(ip,this);
+    ConnectionThread connectionThread = new ConnectionThread(ip,this);
+    SeaBattleClientOne seaBattleClientOne = new SeaBattleClientOne();
 
     ConnectionMenu(JPanel menuPanel) {
         this.menuPanel = menuPanel;
-        colorChangedThread.start();
+        connectionThread.start();
         drawPanel();
 
 
@@ -21,7 +22,7 @@ public class ConnectionMenu extends JPanel {
     }
 
     private void connectToServer() {
-        colorChangedThread.interrupt();
+        connectionThread.interrupt();
 
 
     }
@@ -88,7 +89,7 @@ public class ConnectionMenu extends JPanel {
         graphics2D.setColor(Color.ORANGE);
         graphics2D.drawRoundRect(0, 0, this.getWidth(), this.getHeight(), arc, arc);
 
-        if (colorChangedThread.ipCorrect) {
+        if (connectionThread.ipCorrect) {
             graphics2D.setColor(Color.GREEN);
         } else {
             graphics2D.setColor(Color.RED);

@@ -2,6 +2,8 @@ import java.io.*;
 import java.net.*;
 
 public class SeaBattleServer {
+
+    private static String password = "UTP_12345";
     public static void main(String[] args) {
         int port = 9999;
 
@@ -14,6 +16,12 @@ public class SeaBattleServer {
             //Data transmission streams
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            if(in.readLine().equals(password)){
+                out.println("accepted");
+            }else{
+                out.println("denied");
+                clientSocket.close();
+            }
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
             new Thread(() -> {

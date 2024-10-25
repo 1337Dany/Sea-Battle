@@ -2,9 +2,18 @@ import java.io.*;
 import java.net.*;
 
 public class SeaBattleClientOne {
-    public static void main(String[] args) {
-        String serverAddress = "192.168.0.12";
-        int port = 9999;
+
+    String ip;
+    private static int port = 9999;
+
+    private static String password = "UTP_12345";
+
+
+    static {
+
+    }
+
+    public static boolean tryToConnect(String serverAddress) {
 
         try (Socket socket = new Socket(serverAddress, port)) {
             System.out.println("Connection is stable.");
@@ -12,6 +21,10 @@ public class SeaBattleClientOne {
             // Data transmission streams
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out.println(password);
+            if (!in.readLine().equals("accepted")) {
+                return false;
+            }
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
             new Thread(() -> {
@@ -33,5 +46,27 @@ public class SeaBattleClientOne {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return true;
+    }
+
+    public static boolean checkConnection(String serverAddress) {
+        boolean check = false;
+
+        try (Socket socket = new Socket(serverAddress, port)) {
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            out.println(password);
+            check = in.readLine().equals("Accepted");
+
+            socket.close();
+            out.close();
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return check;
     }
 }

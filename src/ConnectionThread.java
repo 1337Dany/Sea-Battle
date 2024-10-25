@@ -1,12 +1,11 @@
 import javax.swing.*;
-import java.awt.*;
 
-public class ColorChangedThread extends Thread {
+public class ConnectionThread extends Thread {
     boolean ipCorrect = false;
     JTextArea ip;
     JPanel connectMenu;
 
-    public ColorChangedThread(JTextArea ip, JPanel connectMenu) {
+    public ConnectionThread(JTextArea ip, JPanel connectMenu) {
         this.ip = ip;
         this.connectMenu = connectMenu;
     }
@@ -16,8 +15,9 @@ public class ColorChangedThread extends Thread {
         try {
             while (true) {
 
-                ipCorrect = ip.getText().equals("127");
                 connectMenu.repaint();
+                ipCorrect = SeaBattleClientOne.checkConnection(ip.getText());
+                System.out.println(ip.getText());
 
                 Thread.sleep(1000);
             }
