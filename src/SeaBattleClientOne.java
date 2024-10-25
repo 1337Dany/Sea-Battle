@@ -52,18 +52,18 @@ public class SeaBattleClientOne {
     public static boolean checkConnection(String serverAddress) {
         boolean check = false;
 
-        try (Socket socket = new Socket(serverAddress, port)) {
+        try {
+            Socket socket = new Socket(serverAddress, port);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             out.println(password);
-            check = in.readLine().equals("Accepted");
+            if(in.readLine().equals("accepted")){
+                check = true;
+            }
 
-            socket.close();
-            out.close();
-            in.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Incorrect IP");
         }
 
 

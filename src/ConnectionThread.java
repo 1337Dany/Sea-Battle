@@ -15,9 +15,9 @@ public class ConnectionThread extends Thread {
         try {
             while (true) {
 
-                connectMenu.repaint();
                 ipCorrect = SeaBattleClientOne.checkConnection(ip.getText());
                 System.out.println(ip.getText());
+                connectMenu.repaint();
 
                 Thread.sleep(1000);
             }
