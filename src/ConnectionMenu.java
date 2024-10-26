@@ -2,27 +2,25 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ConnectionMenu extends JPanel {
-    JTextArea ip = new JTextArea();
-    JButton connectButton = new JButton("Connect");
+    JTextArea ip = new JTextArea("test");
+
+    JButton checkIPButton = new JButton("Check IP");
     JPanel menuPanel;
-    ConnectionThread connectionThread = new ConnectionThread(ip,this);
-    SeaBattleClientOne seaBattleClientOne = new SeaBattleClientOne();
+    static boolean isCorrect = false;
 
     ConnectionMenu(JPanel menuPanel) {
         this.menuPanel = menuPanel;
-        connectionThread.start();
         drawPanel();
 
 
-        connectButton.addActionListener(e -> {
-            connectToServer();
+        checkIPButton.addActionListener(e -> {
+            CheckClientConnection checkClientConnection = new CheckClientConnection(ip, this);
+            //if(checkClientConnection.checkConnection(ip.getText())){
+            if (ip.getText().equals("test")) {
+                isCorrect = true;
+                repaint();
+            }
         });
-
-
-    }
-
-    private void connectToServer() {
-        connectionThread.interrupt();
 
 
     }
@@ -60,7 +58,7 @@ public class ConnectionMenu extends JPanel {
                 text.getHeight()
         );
 
-        connectButton.setBounds(
+        checkIPButton.setBounds(
                 this.getWidth() / 2 - (int) (0.3 * this.getWidth()) / 2,
                 this.getHeight() - (int) (0.2 * this.getHeight()),
                 (int) (0.3 * this.getWidth()),
@@ -69,9 +67,7 @@ public class ConnectionMenu extends JPanel {
 
         this.add(text);
         this.add(ip);
-        this.add(connectButton);
-
-        FrameScalability.updateComponents(this);
+        this.add(checkIPButton);
     }
 
     @Override
@@ -89,12 +85,16 @@ public class ConnectionMenu extends JPanel {
         graphics2D.setColor(Color.ORANGE);
         graphics2D.drawRoundRect(0, 0, this.getWidth(), this.getHeight(), arc, arc);
 
-        if (connectionThread.ipCorrect) {
+        if (isCorrect) {
             graphics2D.setColor(Color.GREEN);
         } else {
             graphics2D.setColor(Color.RED);
         }
 
         graphics2D.drawRoundRect((int) (ip.getX() * 0.55), (int) (ip.getY() * 0.93), (int) (ip.getWidth() / 0.9), (int) (ip.getHeight() / 0.8), 30, 30);
+    }
+
+    public String getIp() {
+        return ip.getText();
     }
 }

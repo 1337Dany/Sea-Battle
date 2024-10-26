@@ -8,9 +8,8 @@ public class SeaBattleClientOne {
 
     private static String password = "UTP_12345";
 
-
-    static {
-
+    SeaBattleClientOne(String ip){
+        this.ip = ip;
     }
 
     public static boolean tryToConnect(String serverAddress) {

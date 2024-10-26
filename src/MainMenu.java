@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.Vector;
 
 public class MainMenu extends JFrame {
     private final JButton host = new JButton("Host");
@@ -10,12 +9,11 @@ public class MainMenu extends JFrame {
     MainMenu() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(MAXIMIZED_BOTH);
-        this.setVisible(true);
+        setUndecorated(true);
+        this.setBackground(Color.BLACK);
+        new SettingsSetter(this);
 
         this.setLayout(new BorderLayout());
-
-        Resources resources = Resources.GAME_ICON;
-        this.setIconImage(resources.getImage());
 
         mainMenu();
     }
@@ -30,7 +28,17 @@ public class MainMenu extends JFrame {
         });
 
         connect.addActionListener(e -> {
-            menuPanel.add(new ConnectionMenu(menuPanel), BorderLayout.EAST);
+            ConnectionMenu connectionMenu = new ConnectionMenu(menuPanel);
+            menuPanel.add(connectionMenu, BorderLayout.EAST);
+
+            if(ConnectionMenu.isCorrect){
+                Game game = new Game(new SeaBattleClientOne(connectionMenu.getIp()),this);
+                this.remove(menuPanel);
+                revalidate();
+                SettingsSetter.setParametersToObjects(game);
+                this.add(game, BorderLayout.CENTER);
+            }
+
             repaint();
         });
 
@@ -38,7 +46,6 @@ public class MainMenu extends JFrame {
     }
 
     private void drawMenu(JPanel menuPanel) {
-        new FrameScalability(this);
         menuPanel.setLayout(null);
         menuPanel.setBackground(Color.DARK_GRAY);
 
@@ -84,8 +91,6 @@ public class MainMenu extends JFrame {
         menuPanel.setVisible(true);
 
         this.add(menuPanel, BorderLayout.CENTER);
-
-        FrameScalability.updateComponents(menuPanel);
     }
 
 }
