@@ -23,8 +23,9 @@ public class MainMenu extends JFrame {
         drawMenu(menuPanel);
 
         host.addActionListener(e -> {
+            Game game = new Game(new SeaBattleServer(), this);
             this.remove(menuPanel);
-            new SeaBattleServer();
+            revalidate();
         });
 
         connect.addActionListener(e -> {
