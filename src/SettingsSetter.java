@@ -10,7 +10,7 @@ public class SettingsSetter {
         try {
             window.setIconImage(new ImageIcon("src/Resources/Images/seaBattleIcon.png").getImage());
             font = Font.createFont(Font.TRUETYPE_FONT,
-                    new java.io.File("src/Resources/Fonts/Montserrat-Bold.ttf"));
+                    new java.io.File("src/Resources/Fonts/Montserrat-BoldItalic.ttf"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -19,7 +19,10 @@ public class SettingsSetter {
     }
 
     public static void setParametersToObjects(Component component) {
-        component.setFont(font);
+        if(!(component.getFont() == null)){
+            component.setFont(font.deriveFont((float) component.getFont().getSize()));
+
+        }
         component.setVisible(true);
         for (Component child : ((Container) component).getComponents()) {
             setParametersToObjects(child);

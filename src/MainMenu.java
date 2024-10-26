@@ -11,9 +11,12 @@ public class MainMenu extends JFrame {
         setExtendedState(MAXIMIZED_BOTH);
         setUndecorated(true);
         this.setBackground(Color.BLACK);
+        this.setLayout(null);
         new SettingsSetter(this);
 
         mainMenu();
+
+        SettingsSetter.setParametersToObjects(this);
     }
 
     private void mainMenu() {
@@ -21,9 +24,11 @@ public class MainMenu extends JFrame {
         drawMenu(menuPanel);
 
         host.addActionListener(e -> {
-            Game game = new Game(new SeaBattleServer(), this);
             this.remove(menuPanel);
             revalidate();
+            GameManager gameManager = new GameManager(new SeaBattleServer(), this);
+
+            repaint();
         });
 
         connect.addActionListener(e -> {
@@ -31,9 +36,9 @@ public class MainMenu extends JFrame {
             menuPanel.add(connectionMenu);
 
             if(ConnectionMenu.isCorrect){
-                Game game = new Game(new SeaBattleClientOne(connectionMenu.getIp()),this);
                 this.remove(menuPanel);
                 revalidate();
+                GameManager gameManager = new GameManager(new SeaBattleClientOne(connectionMenu.getIp()),this);
             }
 
             repaint();
@@ -45,6 +50,12 @@ public class MainMenu extends JFrame {
     private void drawMenu(JPanel menuPanel) {
         menuPanel.setLayout(null);
         menuPanel.setBackground(Color.DARK_GRAY);
+
+        menuPanel.setBounds(0,
+                0,
+                this.getWidth(),
+                this.getHeight()
+                );
 
 
         JLabel logo = new JLabel("SEA BATTLE");

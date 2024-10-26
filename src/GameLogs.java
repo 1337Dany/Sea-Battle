@@ -1,20 +1,32 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class GameField extends JPanel {
-    JFrame window;
-
-    GameField(JFrame window) {
-        this.window = window;
-        this.setLayout(null);
-        this.setBackground(Color.DARK_GRAY);
-        drawField();
+public class GameLogs extends JPanel {
+    GameManager gameManager;
+    GameLogs(GameManager gameManager){
+        this.gameManager = gameManager;
     }
 
-    public void drawField() {
-        window.add(this);
-        this.setBounds(0, 0,650,650);
-        revalidate();
+    public void drawGameLogs(){
+
+        this.setLayout(null);
+        this.setBackground(Color.DARK_GRAY);
+
+        JLabel gameLogsLogo = new JLabel("game logs");
+        gameLogsLogo.setFont(gameLogsLogo.getFont().deriveFont(20.0f));
+        gameLogsLogo.setForeground(Color.ORANGE);
+        gameLogsLogo.setBackground(Color.DARK_GRAY);
+        gameLogsLogo.setVerticalAlignment(SwingConstants.CENTER);
+        gameLogsLogo.setHorizontalAlignment(SwingConstants.CENTER);
+
+        gameLogsLogo.setBounds(
+                0,
+                5,
+                this.getWidth(),
+                50
+        );
+        this.add(gameLogsLogo);
+        gameManager.getWindow().add(this);
     }
 
     @Override
@@ -36,11 +48,6 @@ public class GameField extends JPanel {
                 strokeWidth, strokeWidth,
                 this.getWidth()-strokeWidth*2, this.getHeight()-strokeWidth*2,
                 arc, arc);
-
-        for (int i = 1; i <= 9; i++) {
-            graphics2D.setColor(Color.ORANGE);
-            graphics2D.fillRect((this.getWidth() / 10 * i), strokeWidth, 5, this.getHeight()-strokeWidth*2);
-            graphics.fillRect(strokeWidth, this.getHeight() / 10 * i, this.getWidth()-strokeWidth*2, 5);
-        }
     }
+
 }

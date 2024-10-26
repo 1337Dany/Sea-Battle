@@ -75,15 +75,21 @@ public class ConnectionMenu extends JPanel {
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics;
 
+        int strokeWidth = 10;
         int arc = 100;
 
         graphics2D.setColor(Color.WHITE);
-        graphics2D.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), arc, arc);
+        graphics2D.fillRoundRect(strokeWidth, strokeWidth,
+                this.getWidth()-strokeWidth*2, this.getHeight()-strokeWidth*2,
+                arc, arc);
 
-        graphics2D.setStroke(new BasicStroke(10));
+        graphics2D.setStroke(new BasicStroke(strokeWidth));
 
         graphics2D.setColor(Color.ORANGE);
-        graphics2D.drawRoundRect(0, 0, this.getWidth(), this.getHeight(), arc, arc);
+        graphics2D.drawRoundRect(
+                strokeWidth, strokeWidth,
+                this.getWidth()-strokeWidth*2, this.getHeight()-strokeWidth*2,
+                arc, arc);
 
         if (isCorrect) {
             graphics2D.setColor(Color.GREEN);
