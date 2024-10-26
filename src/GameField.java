@@ -7,7 +7,7 @@ public class GameField extends JPanel {
     GameField(JFrame window) {
         this.window = window;
         this.setLayout(null);
-        this.setBackground(Color.YELLOW);
+        this.setBackground(Color.WHITE);
         drawField();
     }
 

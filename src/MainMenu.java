@@ -13,8 +13,6 @@ public class MainMenu extends JFrame {
         this.setBackground(Color.BLACK);
         new SettingsSetter(this);
 
-        this.setLayout(new BorderLayout());
-
         mainMenu();
     }
 
@@ -30,7 +28,7 @@ public class MainMenu extends JFrame {
 
         connect.addActionListener(e -> {
             ConnectionMenu connectionMenu = new ConnectionMenu(menuPanel);
-            menuPanel.add(connectionMenu, BorderLayout.EAST);
+            menuPanel.add(connectionMenu);
 
             if(ConnectionMenu.isCorrect){
                 Game game = new Game(new SeaBattleClientOne(connectionMenu.getIp()),this);
@@ -89,7 +87,7 @@ public class MainMenu extends JFrame {
 
         menuPanel.setVisible(true);
 
-        this.add(menuPanel, BorderLayout.CENTER);
+        this.add(menuPanel);
     }
 
 }
