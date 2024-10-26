@@ -1,8 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.LinkedList;
 
 public class GameLogs extends JPanel {
     GameManager gameManager;
+    LinkedList<JLabel> labelList = new LinkedList<>();
     GameLogs(GameManager gameManager){
         this.gameManager = gameManager;
     }
@@ -25,8 +27,25 @@ public class GameLogs extends JPanel {
                 this.getWidth(),
                 50
         );
+
+        addLinkedList();
         this.add(gameLogsLogo);
         gameManager.getWindow().add(this);
+    }
+
+    private void addLinkedList(){
+        for (int i = 1; i <= 5; i++) {
+            JLabel label = new JLabel("Label" + i);
+            label.setFont(label.getFont().deriveFont(15.0f));
+            label.setBounds(
+                    55,
+                    15  + (30 * i),
+                    this.getWidth(),
+                    30
+            );
+            labelList.add(label);
+            this.add(label);
+        }
     }
 
     @Override

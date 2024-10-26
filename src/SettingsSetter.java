@@ -21,7 +21,6 @@ public class SettingsSetter {
     public static void setParametersToObjects(Component component) {
         if(!(component.getFont() == null)){
             component.setFont(font.deriveFont((float) component.getFont().getSize()));
-
         }
         component.setVisible(true);
         for (Component child : ((Container) component).getComponents()) {
