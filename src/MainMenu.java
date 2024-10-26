@@ -35,8 +35,6 @@ public class MainMenu extends JFrame {
                 Game game = new Game(new SeaBattleClientOne(connectionMenu.getIp()),this);
                 this.remove(menuPanel);
                 revalidate();
-                SettingsSetter.setParametersToObjects(game);
-                this.add(game, BorderLayout.CENTER);
             }
 
             repaint();
