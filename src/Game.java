@@ -7,18 +7,17 @@ public class Game {
 
     Game(SeaBattleClientOne seaBattleClientOne, JFrame window) {
         this.window = window;
-
-    }
-
-    Game(SeaBattleServer seaBattleServer, JFrame window) {
-        this.window = window;
-    }
-
-    {
+        gameField = new GameField(window);
         window.add(gameField, BorderLayout.CENTER);
         gameField.setBounds(0, 0, window.getWidth(), window.getHeight());
     }
 
+    Game(SeaBattleServer seaBattleServer, JFrame window) {
+        this.window = window;
+        gameField = new GameField(window);
+        window.add(gameField, BorderLayout.CENTER);
+        gameField.setBounds(0, 0, window.getWidth(), window.getHeight());
+    }
 
     private void history() {
     }

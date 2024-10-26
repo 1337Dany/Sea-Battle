@@ -2,17 +2,17 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameField extends JPanel {
-    Game game;
+    JFrame window;
 
-    GameField(Game game) {
-        this.game = game;
+    GameField(JFrame window) {
+        this.window = window;
         this.setLayout(null);
         this.setBackground(Color.YELLOW);
         drawField();
     }
 
     public void drawField() {
-        this.setBounds(0, 0, (int) (game.getWidth() / 1.2), (int) (game.getHeight() / 1.2));
+        this.setBounds(0, 0, (int) (window.getWidth() / 1.2), (int) (window.getHeight() / 1.2));
         this.setVisible(true);
 
         revalidate();
