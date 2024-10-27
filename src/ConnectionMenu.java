@@ -14,8 +14,7 @@ public class ConnectionMenu extends JPanel {
 
 
         checkIPButton.addActionListener(e -> {
-            CheckClientConnection checkClientConnection = new CheckClientConnection(this);
-            if(checkClientConnection.checkConnection(ip.getText())){
+            if(SeaBattleClientOne.checkConnection(ip.getText())){
             //if (ip.getText().equals("test")) {
                 isCorrect = true;
                 repaint();

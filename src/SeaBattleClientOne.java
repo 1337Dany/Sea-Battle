@@ -4,26 +4,26 @@ import java.net.*;
 public class SeaBattleClientOne {
 
     String ip;
+
     private static int port = 9999;
 
     private static String password = "UTP_12345";
 
-    SeaBattleClientOne(String ip){
+    private static boolean ipCorrect = false;
+
+    SeaBattleClientOne(String ip) {
         this.ip = ip;
     }
 
-    public static boolean tryToConnect(String serverAddress) {
+    public void connect() {
 
-        try (Socket socket = new Socket(serverAddress, port)) {
+        try (Socket socket = new Socket(ip, port)) {
             System.out.println("Connection is stable.");
 
             // Data transmission streams
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out.println(password);
-            if (!in.readLine().equals("accepted")) {
-                return false;
-            }
             BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
             new Thread(() -> {
@@ -45,26 +45,28 @@ public class SeaBattleClientOne {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return true;
     }
 
-    public void checkConnection() {
-        boolean check = false;
-
+    public static boolean checkConnection(String serverAddress) {
         try {
-            Socket socket = new Socket(ip, port);
+            Socket socket = new Socket(serverAddress, port);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             out.println(password);
-            if(in.readLine().equals("accepted")){
-                check = true;
+            if (in.readLine().equals("accepted")) {
+                ipCorrect = true;
             }
+
+            socket.close();
+            out.close();
+            in.close();
 
         } catch (IOException e) {
             System.out.println("Incorrect IP");
         }
 
 
+        return ipCorrect;
     }
 }
