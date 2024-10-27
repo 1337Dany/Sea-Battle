@@ -49,7 +49,7 @@ public class SeaBattleClientOne {
             out.println(password);
             if (in.readLine().equals("accepted")) {
                 ipCorrect = true;
-            }else{
+            } else {
                 ipCorrect = false;
             }
 
@@ -59,5 +59,14 @@ public class SeaBattleClientOne {
 
 
         return ipCorrect;
+    }
+
+    public void closeClient() {
+        try {
+            socket.close();
+            in.close();
+            out.close();
+        } catch (IOException | NullPointerException ignored) {
+        }
     }
 }

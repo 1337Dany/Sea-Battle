@@ -15,7 +15,11 @@ public class GameManager {
     JButton showEnemyDesk = new JButton("Show enemy desk");
     JButton exit = new JButton("Surrender looser");
 
+    SeaBattleServer seaBattleServer;
+    SeaBattleClientOne seaBattleClientOne;
+
     GameManager(SeaBattleClientOne seaBattleClientOne, JFrame window) {
+        this.seaBattleClientOne = seaBattleClientOne;
         this.window = window;
         startGame();
         seaBattleClientOne.connect(gameLogs,inGameChat);
@@ -26,7 +30,7 @@ public class GameManager {
         startGame();
         window.revalidate();
         window.repaint();
-        SeaBattleServer seaBattleServer = new SeaBattleServer();
+        seaBattleServer = new SeaBattleServer();
         seaBattleServer.startServer(gameLogs,inGameChat);
     }
 
@@ -159,6 +163,8 @@ public class GameManager {
         window.remove(gameLogs);
         window.revalidate();
         window.repaint();
+        seaBattleServer.closeServer();
+        seaBattleClientOne.closeClient();
     }
 
     public JFrame getWindow() {

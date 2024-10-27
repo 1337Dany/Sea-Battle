@@ -9,6 +9,10 @@ public class SeaBattleServer {
     InGameChat inGameChat;
 
     private static final String password = "UTP_12345";
+    ServerSocket serverSocket = null;
+    Socket clientSocket = null;
+    BufferedReader in = null;
+    PrintWriter out = null;
 
     public void startServer(GameLogs gameLogs, InGameChat inGameChat) {
         this.gameLogs = gameLogs;
@@ -16,10 +20,8 @@ public class SeaBattleServer {
 
         new Thread(() -> {
 
-            try (ServerSocket serverSocket = new ServerSocket(port)) {
-                Socket clientSocket = null;
-                BufferedReader in = null;
-                PrintWriter out = null;
+            try  {
+                serverSocket = new ServerSocket(port);
                 while (!userConnected) {
                     gameLogs.updateLinkedList("Waiting for client connection...");
 
@@ -33,7 +35,6 @@ public class SeaBattleServer {
                         while (true) {
                             String input = in.readLine();
                             if(input != null) {
-                                System.out.println(input);
                                 if (input.equals("I am connecting")) {
                                     userConnected = true;
                                     gameLogs.updateLinkedList("\t----Client \"" + clientSocket.getInetAddress() + "\" connected.----");
@@ -66,6 +67,15 @@ public class SeaBattleServer {
             }
         }).start();
 
+    }
+
+    public void closeServer() {
+        try {
+            serverSocket.close();
+            clientSocket.close();
+            in.close();
+            out.close();
+        }catch (IOException | NullPointerException ignored){}
     }
 
 
