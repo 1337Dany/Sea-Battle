@@ -77,6 +77,7 @@ public class GameManager {
                 window.getHeight() - 500
         );
         inGameChat.drawInGameChat();
+        inGameChat.messageCheckingThread(networkControl);
 
         gameLogs = new GameLogs(this);
         gameLogs.setBounds(

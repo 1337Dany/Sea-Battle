@@ -1,11 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class InGameChat extends JPanel {
     GameManager gameManager;
     LinkedList<JLabel> labelList = new LinkedList<>();
-    JTextArea message = new JTextArea("");
+    JTextArea message = new JTextArea();
 
     InGameChat(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -37,7 +40,8 @@ public class InGameChat extends JPanel {
                 this.getWidth() - 55 * 2,
                 30
         );
-
+        message.setLineWrap(false);
+        message.setWrapStyleWord(false);
         this.add(message);
         addLinkedList();
         this.add(inGameChatLogo);
@@ -59,29 +63,32 @@ public class InGameChat extends JPanel {
         }
     }
 
-    private void messageCheckingThread(NetworkControl networkControl) {
+    public void messageCheckingThread(NetworkControl networkControl) {
         new Thread(() -> {
-            while (true) {
-                String checkMessage = message.getText();
-                if (!checkMessage.equals("") && checkMessage.contains("\n")) {
-                    addMessage(checkMessage);
-                    networkControl.sendMessage("Chat: " + checkMessage);
+            message.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyPressed(KeyEvent event) {
+                    if (event.getKeyCode() == KeyEvent.VK_ENTER) {
+                        event.consume();
+                        String checkMessage = message.getText().trim();
+                        if (!checkMessage.isEmpty()) {
+                            addMessage(checkMessage);
+                            message.setText("");
+                            networkControl.sendMessage("Chat: " + checkMessage);
+                        }
+                    }
                 }
-            }
+            });
         }).start();
     }
 
-    private void addMessage(String newMessage) {
+    public void addMessage(String newMessage) {
         for (int i = labelList.size() - 1; i > 0; i--) {
             labelList.get(i).setText(labelList.get(i - 1).getText());
         }
         labelList.get(0).setText(newMessage);
         repaint();
         revalidate();
-    }
-
-    public void receiveMessage() {
-
     }
 
     @Override

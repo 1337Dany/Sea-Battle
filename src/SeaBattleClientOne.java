@@ -33,6 +33,8 @@ public class SeaBattleClientOne implements NetworkControl {
                 while ((serverMessage = in.readLine()) != null) {
                     if (serverMessage.equals("I am disconnecting")) {
                         gameLogs.updateLinkedList("----Server disconected----");
+                    }else if(serverMessage.contains("Chat: ")){
+                        inGameChat.addMessage(serverMessage.substring(6));
                     }
                     gameLogs.updateLinkedList("Server message: " + serverMessage);
                 }
