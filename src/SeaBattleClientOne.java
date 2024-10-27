@@ -3,16 +3,16 @@ import java.net.*;
 
 public class SeaBattleClientOne {
 
-    String ip;
+    private static String ip;
 
-    private static int port = 9999;
+    private static final int port = 9999;
 
-    private static String password = "UTP_12345";
+    private static final String password = "UTP_12345";
 
     private static boolean ipCorrect = false;
 
     SeaBattleClientOne(String ip) {
-        this.ip = ip;
+        SeaBattleClientOne.ip = ip;
     }
 
     public void connect() {
@@ -42,6 +42,7 @@ public class SeaBattleClientOne {
     }
 
     public static boolean checkConnection(String serverAddress) {
+        ip = serverAddress;
         try {
             Socket socket = new Socket(serverAddress, port);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
