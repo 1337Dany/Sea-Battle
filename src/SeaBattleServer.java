@@ -56,10 +56,13 @@ public class SeaBattleServer {
                 try {
                     String clientMessage;
                     while ((clientMessage = in.readLine()) != null) {
+                        if(clientMessage.equals("I am disconnecting")){
+                            gameLogs.updateLinkedList("----Client disconected----");
+                        }
                         gameLogs.updateLinkedList("Client data: " + clientMessage);
                     }
                 } catch (IOException e) {
-                    gameLogs.updateLinkedList("\t----Client disconected----");
+                    gameLogs.updateLinkedList("----Client disconected----");
                 }
 
             } catch (IOException e) {

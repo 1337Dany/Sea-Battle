@@ -65,6 +65,7 @@ public class SeaBattleClientOne {
     }
 
     public void closeClient() {
+        out.println("I am disconnecting");
         try {
             socket.close();
             in.close();
