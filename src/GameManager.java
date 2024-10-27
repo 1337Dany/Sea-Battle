@@ -15,29 +15,27 @@ public class GameManager {
     JButton showEnemyDesk = new JButton("Show enemy desk");
     JButton exit = new JButton("Surrender looser");
 
-    SeaBattleServer seaBattleServer;
-    SeaBattleClientOne seaBattleClientOne;
+    NetworkControl networkControl;
 
-    GameManager(SeaBattleClientOne seaBattleClientOne, JFrame window) {
-        this.seaBattleClientOne = seaBattleClientOne;
+    GameManager(SeaBattleClientOne networkControl, JFrame window) {
+        this.networkControl = networkControl;
         this.window = window;
         startGame();
-        seaBattleClientOne.connect(gameLogs,inGameChat);
+        networkControl.connect(gameLogs, inGameChat);
     }
 
-    GameManager(JFrame window) {
+    GameManager(SeaBattleServer networkControl, JFrame window) {
         this.window = window;
+        this.networkControl = networkControl;
         startGame();
         window.revalidate();
         window.repaint();
-        seaBattleServer = new SeaBattleServer();
-        seaBattleServer.connect(gameLogs,inGameChat);
+        networkControl.connect(gameLogs, inGameChat);
     }
 
-    private void startGame(){
+    private void startGame() {
         drawAll();
         SettingsSetter.setParametersToObjects(window);
-
 
 
         exit.addActionListener(event -> {
@@ -136,7 +134,7 @@ public class GameManager {
 
         showEnemyDesk.setBounds(
                 exit.getX(),
-                buttonPanel.getHeight()/2,
+                buttonPanel.getHeight() / 2,
                 exit.getWidth(),
                 exit.getHeight()
         );
@@ -154,7 +152,7 @@ public class GameManager {
         window.add(buttonPanel);
     }
 
-    private void closeAll(){
+    private void closeAll() {
         window.remove(gameField);
         window.remove(placeShips);
         window.remove(buttonPanel);
@@ -163,12 +161,8 @@ public class GameManager {
         window.remove(gameLogs);
         window.revalidate();
         window.repaint();
-        try {
-            seaBattleServer.closeConnection();
-        }catch (NullPointerException ignored){}
-        try {
-            seaBattleClientOne.closeConnection();
-        }catch (NullPointerException ignored){}
+        networkControl.closeConnection();
+
     }
 
     public JFrame getWindow() {

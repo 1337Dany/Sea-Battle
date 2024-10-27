@@ -34,7 +34,7 @@ public class InGameChat extends JPanel {
         message.setBounds(
                 55,
                 60,
-                this.getWidth() - 55*2,
+                this.getWidth() - 55 * 2,
                 30
         );
 
@@ -58,38 +58,29 @@ public class InGameChat extends JPanel {
             this.add(label);
         }
     }
-    private void messageCheckingThread(SeaBattleServer seaBattleServer){
+
+    private void messageCheckingThread(NetworkControl networkControl) {
         new Thread(() -> {
-            while (true){
+            while (true) {
                 String checkMessage = message.getText();
-                if(!checkMessage.equals("") && checkMessage.contains("\n")){
+                if (!checkMessage.equals("") && checkMessage.contains("\n")) {
                     addMessage(checkMessage);
-                    seaBattleServer.sendMessage("Chat: " + checkMessage);
-                }
-            }
-        }).start();
-    }private void messageCheckingThread(SeaBattleClientOne seaBattleClientOne){
-        new Thread(() -> {
-            while (true){
-                String checkMessage = message.getText();
-                if(!checkMessage.equals("") && checkMessage.contains("\n")){
-                    addMessage(checkMessage);
-                    seaBattleClientOne.sendMessage("Chat: " + checkMessage);
+                    networkControl.sendMessage("Chat: " + checkMessage);
                 }
             }
         }).start();
     }
 
-    private void addMessage(String newMessage){
-        for (int i =  labelList.size()-1; i > 0; i--) {
-            labelList.get(i).setText(labelList.get(i-1).getText());
+    private void addMessage(String newMessage) {
+        for (int i = labelList.size() - 1; i > 0; i--) {
+            labelList.get(i).setText(labelList.get(i - 1).getText());
         }
         labelList.get(0).setText(newMessage);
         repaint();
         revalidate();
     }
 
-    public void receiveMessage(){
+    public void receiveMessage() {
 
     }
 
