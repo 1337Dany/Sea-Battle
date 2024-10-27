@@ -72,7 +72,7 @@ public class InGameChat extends JPanel {
                         event.consume();
                         String checkMessage = message.getText().trim();
                         if (!checkMessage.isEmpty()) {
-                            addMessage(checkMessage);
+                            addMessage("(Me): " + checkMessage);
                             message.setText("");
                             networkControl.sendMessage("Chat: " + checkMessage);
                         }
