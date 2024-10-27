@@ -12,9 +12,11 @@ public class CheckClientConnection {
     private static boolean ipCorrect = false;
     JPanel connectMenu;
 
-    public CheckClientConnection(JTextArea ip, JPanel connectMenu) {
+    public CheckClientConnection(JPanel connectMenu) {
         this.connectMenu = connectMenu;
+
     }
+
     public boolean checkConnection(String serverAddress) {
         try {
             Socket socket = new Socket(serverAddress, port);
@@ -22,9 +24,13 @@ public class CheckClientConnection {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             out.println(password);
-            if(in.readLine().equals("accepted")){
+            if (in.readLine().equals("accepted")) {
                 ipCorrect = true;
             }
+
+            socket.close();
+            out.close();
+            in.close();
 
         } catch (IOException e) {
             System.out.println("Incorrect IP");

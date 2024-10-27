@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ConnectionMenu extends JPanel {
-    JTextArea ip = new JTextArea("test");
+    JTextArea ip = new JTextArea();
 
     JButton checkIPButton = new JButton("Check IP");
     JPanel menuPanel;
@@ -14,12 +14,12 @@ public class ConnectionMenu extends JPanel {
 
 
         checkIPButton.addActionListener(e -> {
-            CheckClientConnection checkClientConnection = new CheckClientConnection(ip, this);
+            CheckClientConnection checkClientConnection = new CheckClientConnection(this);
             if(checkClientConnection.checkConnection(ip.getText())){
             //if (ip.getText().equals("test")) {
                 isCorrect = true;
                 repaint();
-            }else{
+            }else {
                 isCorrect = false;
                 repaint();
             }
