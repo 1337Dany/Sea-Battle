@@ -5,7 +5,7 @@ import java.util.LinkedList;
 public class InGameChat extends JPanel {
     GameManager gameManager;
     LinkedList<JLabel> labelList = new LinkedList<>();
-    JTextArea message = new JTextArea("(Me) : lkjdflkasdfklahsdfakshdaksjdhfskldfj");
+    JTextArea message = new JTextArea("");
 
     InGameChat(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -57,6 +57,40 @@ public class InGameChat extends JPanel {
             labelList.add(label);
             this.add(label);
         }
+    }
+    private void messageCheckingThread(SeaBattleServer seaBattleServer){
+        new Thread(() -> {
+            while (true){
+                String checkMessage = message.getText();
+                if(!checkMessage.equals("") && checkMessage.contains("\n")){
+                    addMessage(checkMessage);
+                    seaBattleServer.sendMessage("Chat: " + checkMessage);
+                }
+            }
+        }).start();
+    }private void messageCheckingThread(SeaBattleClientOne seaBattleClientOne){
+        new Thread(() -> {
+            while (true){
+                String checkMessage = message.getText();
+                if(!checkMessage.equals("") && checkMessage.contains("\n")){
+                    addMessage(checkMessage);
+                    seaBattleClientOne.sendMessage("Chat: " + checkMessage);
+                }
+            }
+        }).start();
+    }
+
+    private void addMessage(String newMessage){
+        for (int i =  labelList.size()-1; i > 0; i--) {
+            labelList.get(i).setText(labelList.get(i-1).getText());
+        }
+        labelList.get(0).setText(newMessage);
+        repaint();
+        revalidate();
+    }
+
+    public void receiveMessage(){
+
     }
 
     @Override

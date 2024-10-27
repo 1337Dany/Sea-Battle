@@ -31,7 +31,7 @@ public class GameManager {
         window.revalidate();
         window.repaint();
         seaBattleServer = new SeaBattleServer();
-        seaBattleServer.startServer(gameLogs,inGameChat);
+        seaBattleServer.connect(gameLogs,inGameChat);
     }
 
     private void startGame(){
@@ -164,10 +164,10 @@ public class GameManager {
         window.revalidate();
         window.repaint();
         try {
-            seaBattleServer.closeServer();
+            seaBattleServer.closeConnection();
         }catch (NullPointerException ignored){}
         try {
-            seaBattleClientOne.closeClient();
+            seaBattleClientOne.closeConnection();
         }catch (NullPointerException ignored){}
     }
 

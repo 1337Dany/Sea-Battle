@@ -1,7 +1,7 @@
 import java.io.*;
 import java.net.*;
 
-public class SeaBattleClientOne {
+public class SeaBattleClientOne implements NetworkControl {
 
     private static String ip;
 
@@ -20,6 +20,7 @@ public class SeaBattleClientOne {
         SeaBattleClientOne.ip = ip;
     }
 
+    @Override
     public void connect(GameLogs gameLogs, InGameChat inGameChat) {
         this.gameLogs = gameLogs;
         this.inGameChat = inGameChat;
@@ -30,7 +31,7 @@ public class SeaBattleClientOne {
             try {
                 String serverMessage;
                 while ((serverMessage = in.readLine()) != null) {
-                    if(serverMessage.equals("I am disconnecting")){
+                    if (serverMessage.equals("I am disconnecting")) {
                         gameLogs.updateLinkedList("----Server disconected----");
                     }
                     gameLogs.updateLinkedList("Server message: " + serverMessage);
@@ -64,7 +65,13 @@ public class SeaBattleClientOne {
         return ipCorrect;
     }
 
-    public void closeClient() {
+    @Override
+    public void sendMessage(String message) {
+        out.println(message);
+    }
+
+    @Override
+    public void closeConnection() {
         out.println("I am disconnecting");
         try {
             socket.close();

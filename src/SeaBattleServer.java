@@ -1,7 +1,7 @@
 import java.io.*;
 import java.net.*;
 
-public class SeaBattleServer {
+public class SeaBattleServer implements NetworkControl {
     private static final int port = 9999;
     public static boolean userConnected = false;
 
@@ -14,13 +14,14 @@ public class SeaBattleServer {
     BufferedReader in = null;
     PrintWriter out = null;
 
-    public void startServer(GameLogs gameLogs, InGameChat inGameChat) {
+    @Override
+    public void connect(GameLogs gameLogs, InGameChat inGameChat) {
         this.gameLogs = gameLogs;
         this.inGameChat = inGameChat;
 
         new Thread(() -> {
 
-            try  {
+            try {
                 serverSocket = new ServerSocket(port);
                 while (!userConnected) {
                     gameLogs.updateLinkedList("Waiting for client connection...");
@@ -34,12 +35,12 @@ public class SeaBattleServer {
                         gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" tried to connect.");
                         while (true) {
                             String input = in.readLine();
-                            if(input != null) {
+                            if (input != null) {
                                 if (input.equals("I am connecting")) {
                                     userConnected = true;
                                     gameLogs.updateLinkedList("\t----Client \"" + clientSocket.getInetAddress() + "\" connected.----");
                                     break;
-                                }else{
+                                } else {
                                     userConnected = false;
                                     gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" disconnected.");
                                     break;
@@ -56,7 +57,7 @@ public class SeaBattleServer {
                 try {
                     String clientMessage;
                     while ((clientMessage = in.readLine()) != null) {
-                        if(clientMessage.equals("I am disconnecting")){
+                        if (clientMessage.equals("I am disconnecting")) {
                             gameLogs.updateLinkedList("----Client disconected----");
                         }
                         gameLogs.updateLinkedList("Client data: " + clientMessage);
@@ -72,14 +73,21 @@ public class SeaBattleServer {
 
     }
 
-    public void closeServer() {
+    @Override
+    public void sendMessage(String message) {
+        out.println(message);
+    }
+
+    @Override
+    public void closeConnection() {
         try {
             out.println("I am disconnecting");
             serverSocket.close();
             clientSocket.close();
             in.close();
             out.close();
-        }catch (IOException | NullPointerException ignored){}
+        } catch (IOException | NullPointerException ignored) {
+        }
     }
 
 
