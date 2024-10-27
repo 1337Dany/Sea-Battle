@@ -23,10 +23,9 @@ public class SeaBattleClientOne {
             // Data transmission streams
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out.println(password);
-            BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
             new Thread(() -> {
+                out.println("I am connecting");
                 try {
                     String serverMessage;
                     while ((serverMessage = in.readLine()) != null) {
@@ -36,11 +35,6 @@ public class SeaBattleClientOne {
                     e.printStackTrace();
                 }
             }).start();
-
-            String message;
-            while ((message = userInput.readLine()) != null) {
-                out.println(message);
-            }
 
         } catch (IOException e) {
             e.printStackTrace();

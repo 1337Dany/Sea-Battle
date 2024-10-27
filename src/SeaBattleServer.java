@@ -29,10 +29,13 @@ public class SeaBattleServer {
                         out.println("accepted");
                         gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" tried to connect.");
                         while (true) {
-                            if (in.readLine().equals("I am connecting")) {
-                                userConnected = true;
-                                gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" connected.");
-                                break;
+                            String input = in.readLine();
+                            if(input != null) {
+                                if (input.equals("I am connecting")) {
+                                    userConnected = true;
+                                    gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" connected.");
+                                    break;
+                                }
                             }
                         }
                     } else if (!in.readLine().equals(password) && !userConnected) {
