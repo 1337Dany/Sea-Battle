@@ -35,7 +35,7 @@ public class GameLogs extends JPanel {
 
     private void addLinkedList(){
         for (int i = 1; i <= 5; i++) {
-            JLabel label = new JLabel("Label" + i);
+            JLabel label = new JLabel();
             label.setFont(label.getFont().deriveFont(15.0f));
             label.setBounds(
                     55,
