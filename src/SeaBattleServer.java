@@ -34,7 +34,7 @@ public class SeaBattleServer {
                                 System.out.println(input);
                                 if (input.equals("I am connecting")) {
                                     userConnected = true;
-                                    gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" connected.");
+                                    gameLogs.updateLinkedList("\t----Client \"" + clientSocket.getInetAddress() + "\" connected.----");
                                     break;
                                 }else{
                                     userConnected = false;
@@ -56,7 +56,7 @@ public class SeaBattleServer {
                         gameLogs.updateLinkedList("Client data: " + clientMessage);
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    gameLogs.updateLinkedList("\t----Client disconected----");
                 }
 
             } catch (IOException e) {
