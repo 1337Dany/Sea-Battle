@@ -30,6 +30,9 @@ public class SeaBattleClientOne {
             try {
                 String serverMessage;
                 while ((serverMessage = in.readLine()) != null) {
+                    if(serverMessage.equals("I am disconnecting")){
+                        gameLogs.updateLinkedList("----Server disconected----");
+                    }
                     gameLogs.updateLinkedList("Server message: " + serverMessage);
                 }
             } catch (IOException e) {

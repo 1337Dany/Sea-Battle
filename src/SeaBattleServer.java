@@ -71,6 +71,7 @@ public class SeaBattleServer {
 
     public void closeServer() {
         try {
+            out.println("I am disconnecting");
             serverSocket.close();
             clientSocket.close();
             in.close();
