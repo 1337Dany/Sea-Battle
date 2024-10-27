@@ -165,6 +165,8 @@ public class GameManager {
         window.repaint();
         try {
             seaBattleServer.closeServer();
+        }catch (NullPointerException ignored){}
+        try {
             seaBattleClientOne.closeClient();
         }catch (NullPointerException ignored){}
     }
