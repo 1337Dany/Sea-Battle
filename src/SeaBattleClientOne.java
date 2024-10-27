@@ -51,11 +51,13 @@ public class SeaBattleClientOne {
             out.println(password);
             if (in.readLine().equals("accepted")) {
                 ipCorrect = true;
+                out.close();
+                in.close();
+            }else{
+                socket.close();
+                out.close();
+                in.close();
             }
-
-            socket.close();
-            out.close();
-            in.close();
 
         } catch (IOException e) {
             System.out.println("Incorrect IP");
