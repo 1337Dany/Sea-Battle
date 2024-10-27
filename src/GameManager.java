@@ -163,8 +163,10 @@ public class GameManager {
         window.remove(gameLogs);
         window.revalidate();
         window.repaint();
-        seaBattleServer.closeServer();
-        seaBattleClientOne.closeClient();
+        try {
+            seaBattleServer.closeServer();
+            seaBattleClientOne.closeClient();
+        }catch (NullPointerException ignored){}
     }
 
     public JFrame getWindow() {
