@@ -18,7 +18,6 @@ public class SeaBattleClientOne {
     public void connect() {
 
         try (Socket socket = new Socket(ip, port)) {
-            System.out.println("Connection is stable.");
 
             // Data transmission streams
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -51,12 +50,7 @@ public class SeaBattleClientOne {
             out.println(password);
             if (in.readLine().equals("accepted")) {
                 ipCorrect = true;
-                out.close();
-                in.close();
-            }else{
-                socket.close();
-                out.close();
-                in.close();
+
             }
 
         } catch (IOException e) {

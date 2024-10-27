@@ -30,10 +30,15 @@ public class SeaBattleServer {
                         gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" tried to connect.");
                         while (true) {
                             String input = in.readLine();
+                            System.out.println(input);
                             if(input != null) {
                                 if (input.equals("I am connecting")) {
                                     userConnected = true;
                                     gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" connected.");
+                                    break;
+                                }else{
+                                    userConnected = false;
+                                    gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" disconnected.");
                                     break;
                                 }
                             }
