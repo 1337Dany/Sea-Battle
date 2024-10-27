@@ -48,6 +48,15 @@ public class GameLogs extends JPanel {
         }
     }
 
+    public void updateLinkedList(String newMessage){
+        for (int i =  labelList.size()-1; i > 0; i--) {
+            labelList.get(i).setText(labelList.get(i-1).getText());
+        }
+        labelList.get(0).setText(newMessage);
+        repaint();
+        revalidate();
+    }
+
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);

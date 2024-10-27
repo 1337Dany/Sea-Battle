@@ -5,53 +5,58 @@ public class SeaBattleServer {
     private static final int port = 9999;
     public static boolean userConnected = false;
 
+    GameLogs gameLogs;
+
     private static final String password = "UTP_12345";
 
-    public static void kjhgkjhg(String args) {
+    public void startServer(GameLogs gameLogs) {
+        this.gameLogs = gameLogs;
 
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            System.out.println("Waiting for client connection...");
+        new Thread(() -> {
+            try (ServerSocket serverSocket = new ServerSocket(port)) {
+                gameLogs.updateLinkedList("Waiting for client connection...");
 
-            Socket clientSocket = serverSocket.accept();
-            System.out.println("Client \"" + clientSocket.getInetAddress() + "\" connected succesfully.");
+                Socket clientSocket = serverSocket.accept();
+                //Data transmission streams
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                if (in.readLine().equals(password)) {
+                    out.println("accepted");
+                    gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" tried to connect.");
+                } else {
+                    out.println("denied");
+                    gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" has declined.");
+                    clientSocket.close();
+                }
 
-            //Data transmission streams
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            if (in.readLine().equals(password)) {
-                out.println("accepted");
-            } else {
-                out.println("denied");
-                clientSocket.close();
-            }
-            BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
+                BufferedReader userInput = new BufferedReader(new InputStreamReader(System.in));
 
-            new Thread(() -> {
+
                 try {
                     String clientMessage;
                     while ((clientMessage = in.readLine()) != null) {
-                        System.out.println("Client data: " + clientMessage);
+                        gameLogs.updateLinkedList("Client data: " + clientMessage);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }).start();
 
-            // Sending message to user
-            String message;
-            while ((message = userInput.readLine()) != null) {
-                out.println(message);
+                // Sending message to user
+                String message;
+                while ((message = userInput.readLine()) != null) {
+                    out.println(message);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }).start();
 
     }
 
-    public static void main(String[] args) {
-        checkConnection();
-    }
+    //public static void main(String[] args) {
+//        checkConnection();
+//    }
 
     public static void checkConnection() {
         new Thread(() -> {

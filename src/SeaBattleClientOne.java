@@ -48,11 +48,11 @@ public class SeaBattleClientOne {
         return true;
     }
 
-    public static boolean checkConnection(String serverAddress) {
+    public void checkConnection() {
         boolean check = false;
 
         try {
-            Socket socket = new Socket(serverAddress, port);
+            Socket socket = new Socket(ip, port);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
@@ -66,6 +66,5 @@ public class SeaBattleClientOne {
         }
 
 
-        return check;
     }
 }

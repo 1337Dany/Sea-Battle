@@ -55,7 +55,6 @@ public class GameField extends JPanel {
                     projection = null; // Если вне сетки, убираем проекцию
                     repaint();
                 }
-                System.out.println(e.getX());
             }
         });
 

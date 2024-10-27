@@ -26,7 +26,7 @@ public class MainMenu extends JFrame {
         host.addActionListener(e -> {
             this.remove(menuPanel);
             revalidate();
-            GameManager gameManager = new GameManager(new SeaBattleServer(), this);
+            GameManager gameManager = new GameManager( this);
             this.add(menuPanel);
             revalidate();
             repaint();

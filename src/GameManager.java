@@ -18,11 +18,16 @@ public class GameManager {
     GameManager(SeaBattleClientOne seaBattleClientOne, JFrame window) {
         this.window = window;
         startGame();
+        seaBattleClientOne.checkConnection();
     }
 
-    GameManager(SeaBattleServer seaBattleServer, JFrame window) {
+    GameManager(JFrame window) {
         this.window = window;
         startGame();
+        window.revalidate();
+        window.repaint();
+        SeaBattleServer seaBattleServer = new SeaBattleServer();
+        seaBattleServer.startServer(gameLogs);
     }
 
     private void startGame(){
