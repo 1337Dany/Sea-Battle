@@ -20,23 +20,18 @@ public class SeaBattleClientOne {
 
     public void connect() {
 
-        try (Socket socket = new Socket(ip, port)) {
-
-            new Thread(() -> {
-                out.println("I am connecting");
-                try {
-                    String serverMessage;
-                    while ((serverMessage = in.readLine()) != null) {
-                        System.out.println("Server message: " + serverMessage);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+        new Thread(() -> {
+            out.println("I am connecting");
+            try {
+                String serverMessage;
+                while ((serverMessage = in.readLine()) != null) {
+                    System.out.println("Server message: " + serverMessage);
                 }
-            }).start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public static boolean checkConnection(String serverAddress) {
