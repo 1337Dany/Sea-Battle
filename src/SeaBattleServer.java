@@ -30,8 +30,8 @@ public class SeaBattleServer {
                         gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" tried to connect.");
                         while (true) {
                             String input = in.readLine();
-                            System.out.println(input);
                             if(input != null) {
+                                System.out.println(input);
                                 if (input.equals("I am connecting")) {
                                     userConnected = true;
                                     gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" connected.");
@@ -46,9 +46,6 @@ public class SeaBattleServer {
                     } else if (!in.readLine().equals(password) && !userConnected) {
                         out.println("denied");
                         gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" has declined.");
-                        clientSocket.close();
-                        in.close();
-                        out.close();
                     }
                 }
 

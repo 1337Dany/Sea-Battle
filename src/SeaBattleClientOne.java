@@ -10,6 +10,9 @@ public class SeaBattleClientOne {
     private static final String password = "UTP_12345";
 
     private static boolean ipCorrect = false;
+    private static Socket socket;
+    private static PrintWriter out;
+    private static BufferedReader in;
 
     SeaBattleClientOne(String ip) {
         SeaBattleClientOne.ip = ip;
@@ -18,10 +21,6 @@ public class SeaBattleClientOne {
     public void connect() {
 
         try (Socket socket = new Socket(ip, port)) {
-
-            // Data transmission streams
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             new Thread(() -> {
                 out.println("I am connecting");
@@ -43,14 +42,15 @@ public class SeaBattleClientOne {
     public static boolean checkConnection(String serverAddress) {
         ip = serverAddress;
         try {
-            Socket socket = new Socket(serverAddress, port);
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            socket = new Socket(serverAddress, port);
+            out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             out.println(password);
             if (in.readLine().equals("accepted")) {
                 ipCorrect = true;
-
+            }else{
+                ipCorrect = false;
             }
 
         } catch (IOException e) {
