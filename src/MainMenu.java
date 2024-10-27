@@ -28,6 +28,7 @@ public class MainMenu extends JFrame {
             revalidate();
             GameManager gameManager = new GameManager(new SeaBattleServer(), this);
             this.add(menuPanel);
+            revalidate();
             repaint();
         });
 
@@ -39,6 +40,9 @@ public class MainMenu extends JFrame {
                 this.remove(menuPanel);
                 revalidate();
                 GameManager gameManager = new GameManager(new SeaBattleClientOne(connectionMenu.getIp()),this);
+                this.add(menuPanel);
+                revalidate();
+                repaint();
             }
 
             repaint();

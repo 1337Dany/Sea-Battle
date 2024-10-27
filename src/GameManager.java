@@ -2,9 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameManager {
-    GameField gameField;
     JFrame window;
 
+    JPanel buttonPanel;
+    GameField gameField;
+    PlaceShips placeShips;
     HistoryLogs historyLogs;
     InGameChat inGameChat;
     GameLogs gameLogs;
@@ -27,15 +29,29 @@ public class GameManager {
         drawAll();
         SettingsSetter.setParametersToObjects(window);
 
+
+
         exit.addActionListener(event -> {
             closeAll();
         });
     }
 
     private void drawAll() {
+        placeShips = new PlaceShips(this);
+
         gameField = new GameField(window);
 
+        placeShips.setBounds(
+                gameField.getX() + gameField.getWidth() + 200,
+                0,
+                window.getWidth() - gameField.getWidth() - 200,
+                500
+        );
         drawButtonPanel();
+
+        placeShips.drawPanel();
+        placeShips.drawShips();
+        gameField.placeShips();
 
         historyLogs = new HistoryLogs(this);
         historyLogs.setBounds(
@@ -44,7 +60,7 @@ public class GameManager {
                 window.getWidth() - gameField.getWidth() - 200,
                 500
         );
-        historyLogs.drawHistory();
+        //historyLogs.drawHistory();
 
         inGameChat = new InGameChat(this);
         inGameChat.setBounds(
@@ -67,20 +83,8 @@ public class GameManager {
         SettingsSetter.setParametersToObjects(window);
     }
 
-    private void history() {
-    }
-
-    private void connection() {
-    }
-
-    private void dataExchange() {
-    }
-
-    private void fieldPainting() {
-    }
-
     private void drawButtonPanel() {
-        JPanel buttonPanel = new JPanel() {
+        buttonPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics graphics) {
                 super.paintComponent(graphics);
@@ -142,7 +146,14 @@ public class GameManager {
     }
 
     private void closeAll(){
-
+        window.remove(gameField);
+        window.remove(placeShips);
+        window.remove(buttonPanel);
+        window.remove(historyLogs);
+        window.remove(inGameChat);
+        window.remove(gameLogs);
+        window.revalidate();
+        window.repaint();
     }
 
     public JFrame getWindow() {
