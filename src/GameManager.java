@@ -11,17 +11,25 @@ public class GameManager {
 
     JButton rotateShip = new JButton("Rotate");
     JButton showEnemyDesk = new JButton("Show enemy desk");
-    JButton surrender = new JButton("Surrender looser");
+    JButton exit = new JButton("Surrender looser");
 
     GameManager(SeaBattleClientOne seaBattleClientOne, JFrame window) {
         this.window = window;
-        drawAll();
+        startGame();
     }
 
     GameManager(SeaBattleServer seaBattleServer, JFrame window) {
         this.window = window;
+        startGame();
+    }
+
+    private void startGame(){
         drawAll();
         SettingsSetter.setParametersToObjects(window);
+
+        exit.addActionListener(event -> {
+            closeAll();
+        });
     }
 
     private void drawAll() {
@@ -106,7 +114,35 @@ public class GameManager {
                 500
         );
 
+        exit.setBounds(
+                15,
+                buttonPanel.getHeight() - 130,
+                buttonPanel.getWidth() - 30,
+                70
+        );
+
+        showEnemyDesk.setBounds(
+                exit.getX(),
+                buttonPanel.getHeight()/2,
+                exit.getWidth(),
+                exit.getHeight()
+        );
+
+        rotateShip.setBounds(
+                exit.getX(),
+                60,
+                exit.getWidth(),
+                exit.getHeight()
+        );
+
+        buttonPanel.add(rotateShip);
+        buttonPanel.add(showEnemyDesk);
+        buttonPanel.add(exit);
         window.add(buttonPanel);
+    }
+
+    private void closeAll(){
+
     }
 
     public JFrame getWindow() {

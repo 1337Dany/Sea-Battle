@@ -13,7 +13,7 @@ public class GameField extends JPanel {
 
     public void drawField() {
         window.add(this);
-        this.setBounds(0, 0,650,650);
+        this.setBounds(0, 0, 650, 650);
         revalidate();
     }
 
@@ -21,26 +21,44 @@ public class GameField extends JPanel {
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics;
-        int strokeWidth = 10;
-        int arc = 100;
-
-        graphics2D.setColor(Color.WHITE);
-        graphics2D.fillRoundRect(strokeWidth, strokeWidth,
-                this.getWidth()-strokeWidth*2, this.getHeight()-strokeWidth*2,
-                arc, arc);
-
-        graphics2D.setStroke(new BasicStroke(strokeWidth));
+        int strokeWidth = 20;
 
         graphics2D.setColor(Color.ORANGE);
-        graphics2D.drawRoundRect(
-                strokeWidth, strokeWidth,
-                this.getWidth()-strokeWidth*2, this.getHeight()-strokeWidth*2,
-                arc, arc);
+        graphics2D.fillRect(strokeWidth,
+                strokeWidth,
+                this.getWidth()-strokeWidth*2,
+                this.getHeight()-strokeWidth*2);
+        graphics2D.setColor(Color.DARK_GRAY);
+        graphics2D.fillRect(
+                strokeWidth*2,
+                strokeWidth*2,
+                this.getWidth() - strokeWidth * 4,
+                this.getHeight() - strokeWidth * 4);
 
+        graphics2D.setColor(Color.WHITE);
+        graphics2D.setFont(getFont().deriveFont(20.0f));
+        for (int i = 1; i <= 10; i++) {
+            graphics2D.drawString(String.valueOf((i-1)),
+                    ((this.getWidth() - (strokeWidth*2))/11)*i + graphics2D.getFontMetrics().stringWidth(String.valueOf(i)),
+                    18);
+            char ch = (char) (i+64);
+            graphics2D.drawString(String.valueOf(ch),
+                    4,
+                    ((this.getHeight() - (strokeWidth))/11)*i +20);
+        }
+
+        graphics2D.setColor(Color.ORANGE);
         for (int i = 1; i <= 9; i++) {
-            graphics2D.setColor(Color.ORANGE);
-            graphics2D.fillRect((this.getWidth() / 10 * i), strokeWidth, 5, this.getHeight()-strokeWidth*2);
-            graphics.fillRect(strokeWidth, this.getHeight() / 10 * i, this.getWidth()-strokeWidth*2, 5);
+            graphics2D.fillRect(
+                    ((this.getWidth() - (strokeWidth * 4)) / 10 * i) + strokeWidth*2,
+                    strokeWidth*2,
+                    5,
+                    this.getHeight() - strokeWidth * 4);
+            graphics.fillRect(
+                    strokeWidth*2,
+                    ((this.getHeight() - (strokeWidth * 4)) / 10 * i) + strokeWidth*2,
+                    this.getWidth() - strokeWidth * 4,
+                    5);
         }
     }
 }

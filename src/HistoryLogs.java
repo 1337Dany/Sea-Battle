@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class HistoryLogs extends JPanel {
@@ -19,12 +20,41 @@ public class HistoryLogs extends JPanel {
         historyLogo.setVerticalAlignment(SwingConstants.CENTER);
         historyLogo.setHorizontalAlignment(SwingConstants.CENTER);
 
+        DefaultTableModel defaultTableModel = new DefaultTableModel();
+        defaultTableModel.addColumn("Action");
+
+        JTable table = new JTable(defaultTableModel);
+        JScrollPane scrollPane = new JScrollPane(table);
+
+
+        table.setIntercellSpacing(new Dimension(0, 0)); // Убирает отступы между ячейками
+        table.setOpaque(false); // Убирает фон таблицы
+
+
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        for (int i = 0; i < 50; i++) {
+
+            defaultTableModel.addRow(new Object[]{"test " + i});
+        }
+
+        table.setBackground(Color.white);
+
         historyLogo.setBounds(
                 0,
                 10,
                 this.getWidth(),
                 50
         );
+
+        scrollPane.setBounds(
+                60,
+                65,
+                (int) (this.getWidth()/1.2),
+                (int) (this.getHeight()/1.2)
+        );
+
+        this.add(scrollPane);
         this.add(historyLogo);
         gameManager.getWindow().add(this);
     }
