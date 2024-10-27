@@ -18,7 +18,7 @@ public class GameManager {
     GameManager(SeaBattleClientOne seaBattleClientOne, JFrame window) {
         this.window = window;
         startGame();
-        seaBattleClientOne.connect();
+        seaBattleClientOne.connect(gameLogs,inGameChat);
     }
 
     GameManager(JFrame window) {
@@ -27,7 +27,7 @@ public class GameManager {
         window.revalidate();
         window.repaint();
         SeaBattleServer seaBattleServer = new SeaBattleServer();
-        seaBattleServer.startServer(gameLogs);
+        seaBattleServer.startServer(gameLogs,inGameChat);
     }
 
     private void startGame(){

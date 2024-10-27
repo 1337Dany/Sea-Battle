@@ -6,11 +6,13 @@ public class SeaBattleServer {
     public static boolean userConnected = false;
 
     GameLogs gameLogs;
+    InGameChat inGameChat;
 
     private static final String password = "UTP_12345";
 
-    public void startServer(GameLogs gameLogs) {
+    public void startServer(GameLogs gameLogs, InGameChat inGameChat) {
         this.gameLogs = gameLogs;
+        this.inGameChat = inGameChat;
 
         new Thread(() -> {
 

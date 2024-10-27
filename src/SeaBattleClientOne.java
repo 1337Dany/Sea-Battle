@@ -8,6 +8,8 @@ public class SeaBattleClientOne {
     private static final int port = 9999;
 
     private static final String password = "UTP_12345";
+    GameLogs gameLogs;
+    InGameChat inGameChat;
 
     private static boolean ipCorrect = false;
     private static Socket socket;
@@ -18,17 +20,20 @@ public class SeaBattleClientOne {
         SeaBattleClientOne.ip = ip;
     }
 
-    public void connect() {
+    public void connect(GameLogs gameLogs, InGameChat inGameChat) {
+        this.gameLogs = gameLogs;
+        this.inGameChat = inGameChat;
 
         new Thread(() -> {
             out.println("I am connecting");
+            gameLogs.updateLinkedList("----Connection successful----");
             try {
                 String serverMessage;
                 while ((serverMessage = in.readLine()) != null) {
-                    System.out.println("Server message: " + serverMessage);
+                    gameLogs.updateLinkedList("Server message: " + serverMessage);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                gameLogs.updateLinkedList("----Server disconected----");
             }
         }).start();
 
@@ -48,8 +53,8 @@ public class SeaBattleClientOne {
                 ipCorrect = false;
             }
 
-        } catch (IOException e) {
-            System.out.println("Incorrect IP");
+        } catch (IOException ignored) {
+
         }
 
 
