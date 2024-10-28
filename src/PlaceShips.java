@@ -6,8 +6,13 @@ public class PlaceShips extends JPanel {
     GameManager gameManager;
 
     private static final ArrayList<Integer> navy = new ArrayList<>();
+    private final JLabel linkors = new JLabel();
+    private final JLabel cruisers = new JLabel();
+    private final JLabel destroyer = new JLabel();
+    private final JLabel submarines = new JLabel();
+    private final ArrayList<JLabel> labels = new ArrayList<>();
 
-    PlaceShips(GameManager gameManager) {
+    PlaceShips( GameManager gameManager) {
         this.gameManager = gameManager;
         createNavy();
     }
@@ -18,6 +23,15 @@ public class PlaceShips extends JPanel {
         navy.add(3);  // destroyer
         navy.add(4);  // submarines
     }
+
+    public int countShips() {
+        int result = 0;
+        for (int i = 0; i < PlaceShips.getNavy().size(); i++) {
+            result += PlaceShips.getNavy().get(i);
+        }
+        return result;
+    }
+
 
     public void drawPanel() {
 
@@ -37,35 +51,42 @@ public class PlaceShips extends JPanel {
                 this.getWidth(),
                 50
         );
+        labels.add(linkors);
+        labels.add(cruisers);
+        labels.add(destroyer);
+        labels.add(submarines);
+        drawShips();
 
         this.add(placeShipsLogo);
         gameManager.getWindow().add(this);
     }
 
-    public void drawShips(){
-        for (int i = 0; i < navy.size(); i++) {
-            JLabel ship = new JLabel();
-            ship.setFont(ship.getFont().deriveFont(30.0f));
-            ship.setForeground(Color.ORANGE);
-            ship.setBackground(Color.DARK_GRAY);
-            ship.setVerticalAlignment(SwingConstants.CENTER);
-            ship.setHorizontalAlignment(SwingConstants.CENTER);
+    private void drawShips() {
+        for (int i = 0; i < labels.size(); i++) {
+            labels.get(i).setFont(labels.get(i).getFont().deriveFont(30.0f));
+            labels.get(i).setForeground(Color.ORANGE);
+            labels.get(i).setBackground(Color.WHITE);
+            labels.get(i).setVerticalAlignment(SwingConstants.CENTER);
+            labels.get(i).setHorizontalAlignment(SwingConstants.CENTER);
 
-            switch (i) {
-                case 0 -> ship.setText("Linkors: " + navy.get(i));
-                case 1 -> ship.setText("Cruisers: " + navy.get(i));
-                case 2 -> ship.setText("Destroyer: " + navy.get(i));
-                case 3 -> ship.setText("Submarines: " + navy.get(i));
-            }
-
-            ship.setBounds(
+            labels.get(i).setBounds(
                     60,
-                    (int) (this.getHeight() / 10) * i,
-                    (int) (this.getWidth()/1.2),
-                    (int) (this.getHeight()/1.2)
+                    (int) (this.getHeight() / 5) * (i + 1),
+                    (int) (this.getWidth() / 1.2),
+                    (int) (this.getHeight() * 0.05)
             );
-            this.add(ship);
+
+            this.add(labels.get(i));
+
         }
+        revalidateLables();
+    }
+
+    public void revalidateLables() {
+        linkors.setText("Linkors: " + navy.get(0));
+        cruisers.setText("Cruisers: " + navy.get(1));
+        destroyer.setText("Destroyer: " + navy.get(2));
+        submarines.setText("Submarines: " + navy.get(3));
     }
 
     @Override

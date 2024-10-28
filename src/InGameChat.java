@@ -35,7 +35,7 @@ public class InGameChat extends JPanel {
         message.setBounds(
                 55+inGameChatLogo.getWidth(),
                 60,
-                this.getWidth() - 55 * 2,
+                (int) (this.getWidth()/1.2),
                 30
         );
         message.setLineWrap(false);

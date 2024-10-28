@@ -35,6 +35,7 @@ public class GameManager {
 
     private void startGame() {
         drawAll();
+        manageCore();
         SettingsSetter.setParametersToObjects(window);
 
 
@@ -43,10 +44,28 @@ public class GameManager {
         });
     }
 
+    private void manageCore() {
+        new Thread(() -> {
+            while (true) {
+                if (placeShips.countShips() == 0) {
+                    window.remove(placeShips);
+                    window.repaint();
+                    window.revalidate();
+
+                    gameLogs.updateLinkedList("I am ready to start");
+                    networkControl.sendMessage("Game: ready");
+                    break;
+                }
+            }
+        }).start();
+    }
+
     private void drawAll() {
+
+
         placeShips = new PlaceShips(this);
 
-        gameField = new GameField(window);
+        gameField = new GameField(placeShips, window);
 
         placeShips.setBounds(
                 gameField.getX() + gameField.getWidth() + 200,
@@ -57,7 +76,6 @@ public class GameManager {
         drawButtonPanel();
 
         placeShips.drawPanel();
-        placeShips.drawShips();
         gameField.placeShips();
 
         historyLogs = new HistoryLogs(this);
@@ -67,7 +85,7 @@ public class GameManager {
                 window.getWidth() - gameField.getWidth() - 200,
                 500
         );
-        //historyLogs.drawHistory();
+        historyLogs.drawHistory();
 
         inGameChat = new InGameChat(this);
         inGameChat.setBounds(
