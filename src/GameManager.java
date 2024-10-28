@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GameManager {
     JFrame window;
@@ -12,9 +14,11 @@ public class GameManager {
     GameLogs gameLogs;
 
     JButton rotateShip = new JButton("Rotate");
+
+    private static boolean rotated = false;
+
     JButton showEnemyDesk = new JButton("Show enemy desk");
     JButton exit = new JButton("Surrender looser");
-
     NetworkControl networkControl;
 
     GameManager(SeaBattleClientOne networkControl, JFrame window) {
@@ -46,9 +50,13 @@ public class GameManager {
 
     private void manageCore() {
         new Thread(() -> {
+            ActionListener actionListener = e -> rotated = !rotated;
+            rotateShip.addActionListener(actionListener);
             while (true) {
                 if (placeShips.countShips() == 0) {
                     window.remove(placeShips);
+                    rotateShip.removeActionListener(actionListener);
+                    buttonPanel.remove(rotateShip);
                     window.repaint();
                     window.revalidate();
 
@@ -186,5 +194,9 @@ public class GameManager {
 
     public JFrame getWindow() {
         return window;
+    }
+
+    public static boolean isRotated() {
+        return rotated;
     }
 }
