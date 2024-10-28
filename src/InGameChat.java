@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
-import java.util.Objects;
 
 public class InGameChat extends JPanel {
     GameManager gameManager;
@@ -19,23 +18,22 @@ public class InGameChat extends JPanel {
         this.setLayout(null);
         this.setBackground(Color.DARK_GRAY);
 
-        JLabel inGameChatLogo = new JLabel("Chat");
-        inGameChatLogo.setFont(inGameChatLogo.getFont().deriveFont(30.0f));
-        inGameChatLogo.setForeground(Color.ORANGE);
+        JLabel inGameChatLogo = new JLabel("Chat: ");
+        inGameChatLogo.setFont(inGameChatLogo.getFont().deriveFont(15.0f));
+        inGameChatLogo.setForeground(Color.DARK_GRAY);
         inGameChatLogo.setBackground(Color.DARK_GRAY);
         inGameChatLogo.setVerticalAlignment(SwingConstants.CENTER);
-        inGameChatLogo.setHorizontalAlignment(SwingConstants.CENTER);
 
         inGameChatLogo.setBounds(
-                0,
-                10,
-                this.getWidth(),
-                50
+                55,
+                60,
+                60,
+                20
         );
 
         message.setFont(message.getFont().deriveFont(15.0f));
         message.setBounds(
-                55,
+                55+inGameChatLogo.getWidth(),
                 60,
                 this.getWidth() - 55 * 2,
                 30
@@ -50,7 +48,7 @@ public class InGameChat extends JPanel {
 
     private void addLinkedList() {
         for (int i = 1; i <= 8; i++) {
-            JLabel label = new JLabel("Label" + i);
+            JLabel label = new JLabel();
             label.setFont(label.getFont().deriveFont(15.0f));
             label.setBounds(
                     55,
