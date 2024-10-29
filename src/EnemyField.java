@@ -115,6 +115,13 @@ public class EnemyField extends JPanel {
                     }
                 }
 
+                for (Point emptyLocation : openedLocations) {
+                    if (emptyLocation != null && emptyLocation.x == col && emptyLocation.y == row) {
+                        graphics2D.setColor(Color.RED); // Цвет подсветки
+                        graphics2D.fillRect(x, y, cellSize, cellSize);
+                    }
+                }
+
                 if (projection != null && projection.x == col && projection.y == row) {
                     if (placable(projection)) {
                         graphics2D.setColor(new Color(0, 255, 0, 128));

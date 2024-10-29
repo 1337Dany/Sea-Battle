@@ -9,7 +9,7 @@ public class GameManager {
     static GameField gameField;
     static EnemyField enemyField;
     PlaceShips placeShips;
-    HistoryLogs historyLogs;
+    static HistoryLogs historyLogs;
     InGameChat inGameChat;
     GameLogs gameLogs;
 
@@ -91,15 +91,18 @@ public class GameManager {
 
     public static void shootTo(int x, int y){
         networkControl.sendMessage("Shoot to: " + x + y);
+        historyLogs.addHistoryNote("Shooting is conducted to " + (char) (x + 64) + y);
     }
     public static void hit(int x, int y){
         Point attack = new Point(x,y);
         if(gameField.getShipLocations().contains(attack)){
             networkControl.sendMessage("hit " + x + y);
+            historyLogs.addHistoryNote((char) (x + 64) + y + " is hitted");
             gameField.getShipLocations().remove(attack);
             gameField.repaint();
         }else{
             networkControl.sendMessage("no hit " + x + y);
+            historyLogs.addHistoryNote((char) (x + 64) + y + " is empty");
         }
     }
     public static void amIHitOpponent(boolean bool, int x, int y){

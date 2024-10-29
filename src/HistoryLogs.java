@@ -4,6 +4,7 @@ import java.awt.*;
 
 public class HistoryLogs extends JPanel {
     GameManager gameManager;
+    DefaultTableModel defaultTableModel;
     HistoryLogs(GameManager gameManager){
         this.gameManager = gameManager;
     }
@@ -20,7 +21,7 @@ public class HistoryLogs extends JPanel {
         historyLogo.setVerticalAlignment(SwingConstants.CENTER);
         historyLogo.setHorizontalAlignment(SwingConstants.CENTER);
 
-        DefaultTableModel defaultTableModel = new DefaultTableModel();
+        defaultTableModel = new DefaultTableModel();
         defaultTableModel.addColumn("Action");
 
         JTable table = new JTable(defaultTableModel);
@@ -32,11 +33,6 @@ public class HistoryLogs extends JPanel {
 
 
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
-
-        for (int i = 0; i < 50; i++) {
-
-            defaultTableModel.addRow(new Object[]{"test " + i});
-        }
 
         table.setBackground(Color.white);
 
@@ -57,6 +53,10 @@ public class HistoryLogs extends JPanel {
         this.add(scrollPane);
         this.add(historyLogo);
         gameManager.getWindow().add(this);
+    }
+
+    public void addHistoryNote(String note){
+        defaultTableModel.addRow(new Object[]{note});
     }
 
     @Override

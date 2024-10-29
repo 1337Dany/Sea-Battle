@@ -12,7 +12,6 @@ public class GameField extends JPanel {
     private int cellSize;
 
     private final ArrayList<Point> shipLocations = new ArrayList<>();
-    private final ArrayList<Point> damagedShipLocations = new ArrayList<>();
 
     private int shipToLand = 0;
     private boolean placable = true;
