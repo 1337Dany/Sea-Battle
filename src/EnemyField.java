@@ -54,7 +54,10 @@ public class EnemyField extends JPanel {
                 int col = adjX / cellSize;
                 int row = adjY / cellSize;
 
-                gameManager.shootTo(col, row);
+                System.out.println(col);
+                System.out.println(row);
+                System.out.println();
+                GameManager.shootTo(col, row);
             }
         });
     }
