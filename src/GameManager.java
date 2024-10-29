@@ -22,12 +22,14 @@ public class GameManager {
     static NetworkControl networkControl;
 
     private static boolean gameStarted = false;
+    public static boolean myTurn = false;
 
     GameManager(SeaBattleClientOne networkControl, JFrame window) {
         this.networkControl = networkControl;
         this.window = window;
         startGame();
         networkControl.connect(gameLogs, inGameChat);
+        myTurn = false;
     }
 
     GameManager(SeaBattleServer networkControl, JFrame window) {
@@ -37,6 +39,7 @@ public class GameManager {
         window.revalidate();
         window.repaint();
         networkControl.connect(gameLogs, inGameChat);
+        myTurn = true;
     }
 
     private void startGame() {
@@ -92,6 +95,7 @@ public class GameManager {
     public static void shootTo(int x, int y) {
         networkControl.sendMessage("Shoot to: " + x + y);
         historyLogs.addHistoryNote("Shooting is conducted to " + ((char) (y + 65)) + x);
+        myTurn = false;
     }
 
     public static void hit(int x, int y) {
@@ -101,11 +105,15 @@ public class GameManager {
             System.out.println(((char) (y + 65)) + x + " is hitted");
             historyLogs.addHistoryNote(((char) (y + 65)) + x + " is hitted");
             gameField.getShipLocations().remove(attack);
+            if(gameField.getShipLocations().size() == 0){
+                networkControl.sendMessage("I loose");
+            }
             gameField.repaint();
         } else {
             networkControl.sendMessage("miss " + x + y);
             historyLogs.addHistoryNote(((char) (y + 65)) + x + " is empty");
         }
+        myTurn = true;
     }
 
     public static void amIHitOpponent(boolean bool, int x, int y) {
