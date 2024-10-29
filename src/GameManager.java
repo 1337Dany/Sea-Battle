@@ -21,6 +21,8 @@ public class GameManager {
     JButton exit = new JButton("Surrender looser");
     NetworkControl networkControl;
 
+    private static boolean gameStarted = false;
+
     GameManager(SeaBattleClientOne networkControl, JFrame window) {
         this.networkControl = networkControl;
         this.window = window;
@@ -54,13 +56,10 @@ public class GameManager {
 
                 }else{
                     enemyField.setVisible(true);
-                    enemyField.setBackground(Color.DARK_GRAY);
                     gameField.setVisible(false);
                 }
                 enemyField.revalidate();
                 enemyField.repaint();
-                System.out.println(enemyField.getWidth());
-                System.out.println(gameField.getWidth());
             });
             exit.addActionListener(event -> {
                 closeAll();
@@ -76,7 +75,10 @@ public class GameManager {
 
                     gameLogs.updateLinkedList("I am ready to start");
                     networkControl.sendMessage("Game: ready");
-                    break;
+                }
+
+                if(placeShips.countShips() == 0 && gameStarted){
+                    gameLogs.updateLinkedList("Game is started!");
                 }
             }
         }).start();
@@ -215,5 +217,9 @@ public class GameManager {
 
     public static boolean isRotated() {
         return rotated;
+    }
+
+    public static void setOpponentState(boolean opponentState) {
+        gameStarted = opponentState;
     }
 }

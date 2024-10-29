@@ -35,8 +35,10 @@ public class SeaBattleClientOne implements NetworkControl {
                         gameLogs.updateLinkedList("----Server disconected----");
                     }else if(serverMessage.contains("Chat: ")){
                         inGameChat.addMessage("(Opponent): " + serverMessage.substring(6));
+                    }else if (serverMessage.contains("Game: ")) {
+                        if (serverMessage.contains("ready")) GameManager.setOpponentState(true);
                     }
-                    gameLogs.updateLinkedList("Server message: " + serverMessage);
+
                 }
             } catch (IOException e) {
                 gameLogs.updateLinkedList("----Server disconected----");
