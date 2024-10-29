@@ -65,8 +65,9 @@ public class GameManager {
                 closeAll();
             });
 
+            boolean isShipsPlaced = false;
             while (true) {
-                if (placeShips.countShips() == 0) {
+                if (placeShips.countShips() == 0 && !isShipsPlaced) {
                     window.remove(placeShips);
                     rotateShip.removeActionListener(actionListener);
                     buttonPanel.remove(rotateShip);
@@ -75,11 +76,15 @@ public class GameManager {
 
                     gameLogs.updateLinkedList("I am ready to start");
                     networkControl.sendMessage("Game: ready");
+
+                    isShipsPlaced = true;
                 }
 
                 if(placeShips.countShips() == 0 && gameStarted){
+                    gameStarted = false;
                     gameLogs.updateLinkedList("Game is started!");
                 }
+
             }
         }).start();
     }
