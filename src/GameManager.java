@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GameManager {
@@ -8,6 +7,7 @@ public class GameManager {
 
     JPanel buttonPanel;
     GameField gameField;
+    EnemyField enemyField;
     PlaceShips placeShips;
     HistoryLogs historyLogs;
     InGameChat inGameChat;
@@ -41,17 +41,31 @@ public class GameManager {
         drawAll();
         manageCore();
         SettingsSetter.setParametersToObjects(window);
-
-
-        exit.addActionListener(event -> {
-            closeAll();
-        });
     }
 
     private void manageCore() {
         new Thread(() -> {
             ActionListener actionListener = e -> rotated = !rotated;
             rotateShip.addActionListener(actionListener);
+            showEnemyDesk.addActionListener(event -> {
+                if(enemyField.isVisible()){
+                    enemyField.setVisible(false);
+                    gameField.setVisible(true);
+
+                }else{
+                    enemyField.setVisible(true);
+                    enemyField.setBackground(Color.DARK_GRAY);
+                    gameField.setVisible(false);
+                }
+                enemyField.revalidate();
+                enemyField.repaint();
+                System.out.println(enemyField.getWidth());
+                System.out.println(gameField.getWidth());
+            });
+            exit.addActionListener(event -> {
+                closeAll();
+            });
+
             while (true) {
                 if (placeShips.countShips() == 0) {
                     window.remove(placeShips);
@@ -74,6 +88,7 @@ public class GameManager {
         placeShips = new PlaceShips(this);
 
         gameField = new GameField(placeShips, window);
+        enemyField = new EnemyField(window);
 
         placeShips.setBounds(
                 gameField.getX() + gameField.getWidth() + 200,
@@ -85,6 +100,8 @@ public class GameManager {
 
         placeShips.drawPanel();
         gameField.placeShips();
+
+
 
         historyLogs = new HistoryLogs(this);
         historyLogs.setBounds(
