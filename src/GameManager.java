@@ -91,25 +91,27 @@ public class GameManager {
 
     public static void shootTo(int x, int y){
         networkControl.sendMessage("Shoot to: " + x + y);
-        historyLogs.addHistoryNote("Shooting is conducted to " + (char) (x + 64) + y);
+        historyLogs.addHistoryNote("Shooting is conducted to " + x + ((char) (y + 64)));
     }
     public static void hit(int x, int y){
         Point attack = new Point(x,y);
         if(gameField.getShipLocations().contains(attack)){
             networkControl.sendMessage("hit " + x + y);
-            historyLogs.addHistoryNote((char) (x + 64) + y + " is hitted");
+            historyLogs.addHistoryNote(x + ((char) (y + 64)) + " is hitted");
             gameField.getShipLocations().remove(attack);
             gameField.repaint();
         }else{
             networkControl.sendMessage("no hit " + x + y);
-            historyLogs.addHistoryNote((char) (x + 64) + y + " is empty");
+            historyLogs.addHistoryNote(x + ((char) (y + 64)) + " is empty");
         }
     }
     public static void amIHitOpponent(boolean bool, int x, int y){
         if(bool){
             enemyField.getShipLocations().add(new Point(x,y));
+            historyLogs.addHistoryNote(x + ((char) (y + 64)) + " is hitted");
         }else {
             enemyField.getOpenedLocations().add(new Point(x,y));
+            historyLogs.addHistoryNote(x + ((char) (y + 64)) + " is empty");
         }
     }
 
