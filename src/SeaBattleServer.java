@@ -68,8 +68,8 @@ public class SeaBattleServer implements NetworkControl {
                             }
                         }else if(clientMessage.contains("Shoot to: ")){
                             GameManager.hit(
-                                    Integer.parseInt(clientMessage.substring(10,10)),
-                                    Integer.parseInt(clientMessage.substring(11,11))
+                                    Integer.parseInt(clientMessage.substring(10,11)),
+                                    Integer.parseInt(clientMessage.substring(11,12))
                             );
                         }else if(clientMessage.contains("hit")){
                             GameManager.amIHitOpponent(true);

@@ -17,6 +17,7 @@ public class EnemyField extends JPanel {
 
     private final int borderSize = 40;
     private final int cellSize;
+
     EnemyField(GameManager gameManager, JFrame window) {
         this.gameManager = gameManager;
         this.window = window;
@@ -35,9 +36,9 @@ public class EnemyField extends JPanel {
                 int row = adjY / cellSize;
 
                 if (col >= 0 && col < 10 && row >= 0 && row < 10) {
-                    projection = new Point(col,row);
+                    projection = new Point(col, row);
                     repaint();
-                }else{
+                } else {
                     projection = null;
                     repaint();
                 }
@@ -53,19 +54,24 @@ public class EnemyField extends JPanel {
                 int col = adjX / cellSize;
                 int row = adjY / cellSize;
 
-                gameManager.shootTo(col,row);
+                gameManager.shootTo(col, row);
             }
         });
     }
-    private boolean placable(Point projection){
+
+    private boolean placable(Point projection) {
         for (Point shipLocation : shipLocations) {
-            if (projection.x == shipLocation.x && projection.y == shipLocation.y) {
-                return false;
+            if (shipLocation != null) {
+                if (projection.x == shipLocation.x && projection.y == shipLocation.y) {
+                    return false;
+                }
             }
         }
         for (Point checkPoint : openedLocations) {
-            if (projection.x == checkPoint.x && projection.y == checkPoint.y) {
-                return false;
+            if (checkPoint != null) {
+                if (projection.x == checkPoint.x && projection.y == checkPoint.y) {
+                    return false;
+                }
             }
         }
 
