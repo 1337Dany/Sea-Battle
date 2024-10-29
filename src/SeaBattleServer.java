@@ -66,6 +66,15 @@ public class SeaBattleServer implements NetworkControl {
                                 GameManager.setOpponentState(true);
                                 gameLogs.updateLinkedList("Opponent is ready");
                             }
+                        }else if(clientMessage.contains("Shoot to: ")){
+                            GameManager.hit(
+                                    Integer.parseInt(clientMessage.substring(10,10)),
+                                    Integer.parseInt(clientMessage.substring(11,11))
+                            );
+                        }else if(clientMessage.contains("hit")){
+                            GameManager.amIHitOpponent(true);
+                        } else if (clientMessage.contains("no hit")) {
+                            GameManager.amIHitOpponent(false);
                         }
 
                     }

@@ -6,8 +6,8 @@ public class GameManager {
     JFrame window;
 
     JPanel buttonPanel;
-    GameField gameField;
-    EnemyField enemyField;
+    static GameField gameField;
+    static EnemyField enemyField;
     PlaceShips placeShips;
     HistoryLogs historyLogs;
     InGameChat inGameChat;
@@ -19,9 +19,10 @@ public class GameManager {
 
     JButton showEnemyDesk = new JButton("Show enemy desk");
     JButton exit = new JButton("Surrender looser");
-    NetworkControl networkControl;
+    static NetworkControl networkControl;
 
     private static boolean gameStarted = false;
+    static Point attack;
 
     GameManager(SeaBattleClientOne networkControl, JFrame window) {
         this.networkControl = networkControl;
@@ -82,11 +83,32 @@ public class GameManager {
 
                 if(placeShips.countShips() == 0 && gameStarted){
                     gameStarted = false;
-                    gameLogs.updateLinkedList("Game is started!");
+                    gameLogs.updateLinkedList("Game is starting!");
                 }
 
             }
         }).start();
+    }
+
+    public static void shootTo(int x, int y){
+        networkControl.sendMessage("Shoot to: " + x + y);
+    }
+    public static void hit(int x, int y){
+        attack = new Point(x,y);
+        if(gameField.getShipLocations().contains(attack)){
+            networkControl.sendMessage("hit");
+            gameField.getShipLocations().remove(attack);
+            gameField.repaint();
+        }else{
+            networkControl.sendMessage("no hit");
+        }
+    }
+    public static void amIHitOpponent(boolean bool){
+        if(bool){
+            enemyField.getShipLocations().add(attack);
+        }else {
+            enemyField.getOpenedLocations().add(attack);
+        }
     }
 
     private void drawAll() {
@@ -95,7 +117,7 @@ public class GameManager {
         placeShips = new PlaceShips(this);
 
         gameField = new GameField(placeShips, window);
-        enemyField = new EnemyField(window);
+        enemyField = new EnemyField(this, window);
 
         placeShips.setBounds(
                 gameField.getX() + gameField.getWidth() + 200,

@@ -10,11 +10,13 @@ public class GameField extends JPanel {
     PlaceShips placeShips;
     private final int borderSize = 40;
     private int cellSize;
+
     private final ArrayList<Point> shipLocations = new ArrayList<>();
+    private final ArrayList<Point> damagedShipLocations = new ArrayList<>();
+
     private int shipToLand = 0;
     private boolean placable = true;
     private final ArrayList<Point> projections = new ArrayList<>();
-
     GameField(PlaceShips placeShips, JFrame window) {
         this.placeShips = placeShips;
         this.window = window;
@@ -275,5 +277,9 @@ public class GameField extends JPanel {
                     5);
         }
 
+    }
+
+    public ArrayList<Point> getShipLocations() {
+        return shipLocations;
     }
 }

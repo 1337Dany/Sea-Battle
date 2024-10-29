@@ -1,17 +1,24 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 
-public class EnemyField extends JPanel implements Runnable {
+public class EnemyField extends JPanel {
     JFrame window;
+    GameManager gameManager;
+
     private final ArrayList<Point> shipLocations = new ArrayList<>();
+
+    private final ArrayList<Point> openedLocations = new ArrayList<>();
+
     private Point projection;
+
     private final int borderSize = 40;
     private final int cellSize;
-
-    EnemyField(JFrame window) {
+    EnemyField(GameManager gameManager, JFrame window) {
+        this.gameManager = gameManager;
         this.window = window;
         this.setBounds(0, 0, 650, 650);
         cellSize = ((this.getWidth() - (borderSize * 2)) / 10);
@@ -36,18 +43,33 @@ public class EnemyField extends JPanel implements Runnable {
                 }
             }
         });
+
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int adjX = e.getX() - borderSize;
+                int adjY = e.getY() - borderSize;
+
+                int col = adjX / cellSize;
+                int row = adjY / cellSize;
+
+                gameManager.shootTo(col,row);
+            }
+        });
     }
-
-    private boolean placable(){
-        return true;
-    }
-
-
-    @Override
-    public void run() {
-        while (true) {
-
+    private boolean placable(Point projection){
+        for (Point shipLocation : shipLocations) {
+            if (projection.x == shipLocation.x && projection.y == shipLocation.y) {
+                return false;
+            }
         }
+        for (Point checkPoint : openedLocations) {
+            if (projection.x == checkPoint.x && projection.y == checkPoint.y) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
@@ -88,7 +110,7 @@ public class EnemyField extends JPanel implements Runnable {
                 }
 
                 if (projection != null && projection.x == col && projection.y == row) {
-                    if (true) {
+                    if (placable(projection)) {
                         graphics2D.setColor(new Color(0, 255, 0, 128));
                     } else {
                         graphics2D.setColor(new Color(255, 0, 0, 128));
@@ -113,5 +135,13 @@ public class EnemyField extends JPanel implements Runnable {
                     5);
         }
 
+    }
+
+    public ArrayList<Point> getShipLocations() {
+        return shipLocations;
+    }
+
+    public ArrayList<Point> getOpenedLocations() {
+        return openedLocations;
     }
 }
