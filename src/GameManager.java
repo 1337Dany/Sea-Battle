@@ -22,7 +22,6 @@ public class GameManager {
     static NetworkControl networkControl;
 
     private static boolean gameStarted = false;
-    static Point attack;
 
     GameManager(SeaBattleClientOne networkControl, JFrame window) {
         this.networkControl = networkControl;
@@ -92,22 +91,24 @@ public class GameManager {
 
     public static void shootTo(int x, int y){
         networkControl.sendMessage("Shoot to: " + x + y);
+        System.out.println("Shoot to: " + x + y);
     }
     public static void hit(int x, int y){
-        attack = new Point(x,y);
+        Point attack = new Point(x,y);
         if(gameField.getShipLocations().contains(attack)){
-            networkControl.sendMessage("hit");
+            networkControl.sendMessage("hit " + x + y);
             gameField.getShipLocations().remove(attack);
             gameField.repaint();
         }else{
-            networkControl.sendMessage("no hit");
+            networkControl.sendMessage("no hit " + x + y);
         }
     }
-    public static void amIHitOpponent(boolean bool){
+    public static void amIHitOpponent(boolean bool, int x, int y){
         if(bool){
-            enemyField.getShipLocations().add(attack);
+            enemyField.getShipLocations().add(new Point(x,y));
+            System.out.println(new Point(x,y));
         }else {
-            enemyField.getOpenedLocations().add(attack);
+            enemyField.getOpenedLocations().add(new Point(x,y));
         }
     }
 
