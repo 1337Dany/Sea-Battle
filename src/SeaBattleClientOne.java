@@ -42,15 +42,15 @@ public class SeaBattleClientOne implements NetworkControl {
                         }
                     } else if (serverMessage.contains("Shoot to: ")) {
                         GameManager.hit(
-                                Integer.parseInt(serverMessage.substring(10, 10)),
-                                Integer.parseInt(serverMessage.substring(11, 11))
+                                Integer.parseInt(serverMessage.substring(10, 11)),
+                                Integer.parseInt(serverMessage.substring(11, 12))
                         );
-                    } else if (serverMessage.contains("hit")) {
-                        GameManager.amIHitOpponent(true,
-                                Integer.parseInt(serverMessage.substring(4, 5)),
-                                Integer.parseInt(serverMessage.substring(5, 6)));
                     } else if (serverMessage.contains("no hit")) {
                         GameManager.amIHitOpponent(false,
+                                Integer.parseInt(serverMessage.substring(7, 8)),
+                                Integer.parseInt(serverMessage.substring(8, 9)));
+                    } else if (serverMessage.contains("hit")) {
+                        GameManager.amIHitOpponent(true,
                                 Integer.parseInt(serverMessage.substring(4, 5)),
                                 Integer.parseInt(serverMessage.substring(5, 6)));
                     }

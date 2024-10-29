@@ -91,7 +91,6 @@ public class GameManager {
 
     public static void shootTo(int x, int y){
         networkControl.sendMessage("Shoot to: " + x + y);
-        System.out.println("Shoot to: " + x + y);
     }
     public static void hit(int x, int y){
         Point attack = new Point(x,y);
@@ -106,7 +105,6 @@ public class GameManager {
     public static void amIHitOpponent(boolean bool, int x, int y){
         if(bool){
             enemyField.getShipLocations().add(new Point(x,y));
-            System.out.println(new Point(x,y));
         }else {
             enemyField.getOpenedLocations().add(new Point(x,y));
         }
