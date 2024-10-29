@@ -50,11 +50,11 @@ public class GameManager {
             ActionListener actionListener = e -> rotated = !rotated;
             rotateShip.addActionListener(actionListener);
             showEnemyDesk.addActionListener(event -> {
-                if(enemyField.isVisible()){
+                if (enemyField.isVisible()) {
                     enemyField.setVisible(false);
                     gameField.setVisible(true);
 
-                }else{
+                } else {
                     enemyField.setVisible(true);
                     gameField.setVisible(false);
                 }
@@ -80,7 +80,7 @@ public class GameManager {
                     isShipsPlaced = true;
                 }
 
-                if(placeShips.countShips() == 0 && gameStarted){
+                if (placeShips.countShips() == 0 && gameStarted) {
                     gameStarted = false;
                     gameLogs.updateLinkedList("Game is starting!");
                 }
@@ -89,31 +89,32 @@ public class GameManager {
         }).start();
     }
 
-    public static void shootTo(int x, int y){
+    public static void shootTo(int x, int y) {
         networkControl.sendMessage("Shoot to: " + x + y);
         historyLogs.addHistoryNote("Shooting is conducted to " + ((char) (y + 65)) + x);
     }
-    public static void hit(int x, int y){
-        Point attack = new Point(x,y);
-        if(gameField.getShipLocations().contains(attack)){
+
+    public static void hit(int x, int y) {
+        Point attack = new Point(x, y);
+        if (gameField.getShipLocations().contains(attack)) {
             networkControl.sendMessage("hit " + x + y);
-            char character = ((char) (y + 64));
-            System.out.println(x + character + " is hitted");
-            historyLogs.addHistoryNote(x + character + " is hitted");
+            System.out.println(((char) (y + 65)) + x + " is hitted");
+            historyLogs.addHistoryNote(((char) (y + 65)) + x + " is hitted");
             gameField.getShipLocations().remove(attack);
             gameField.repaint();
-        }else{
+        } else {
             networkControl.sendMessage("miss " + x + y);
-            historyLogs.addHistoryNote(x + ((char) (y + 64)) + " is empty");
+            historyLogs.addHistoryNote(((char) (y + 65)) + x + " is empty");
         }
     }
-    public static void amIHitOpponent(boolean bool, int x, int y){
-        if(bool){
-            enemyField.getShipLocations().add(new Point(x,y));
-            historyLogs.addHistoryNote(x + ((char) (y + 64)) + " is hitted");
-        }else {
-            enemyField.getOpenedLocations().add(new Point(x,y));
-            historyLogs.addHistoryNote("Field " + x + ((char) (y + 64)) + " is empty");
+
+    public static void amIHitOpponent(boolean bool, int x, int y) {
+        if (bool) {
+            enemyField.getShipLocations().add(new Point(x, y));
+            historyLogs.addHistoryNote("Field " + ((char) (y + 65)) + x + " is hitted");
+        } else {
+            enemyField.getOpenedLocations().add(new Point(x, y));
+            historyLogs.addHistoryNote("Field " + ((char) (y + 65)) + x+ " is empty");
         }
     }
 
@@ -135,7 +136,6 @@ public class GameManager {
 
         placeShips.drawPanel();
         gameField.placeShips();
-
 
 
         historyLogs = new HistoryLogs(this);
