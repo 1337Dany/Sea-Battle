@@ -62,7 +62,10 @@ public class SeaBattleServer implements NetworkControl {
                         } else if (clientMessage.contains("Chat: ")) {
                             inGameChat.addMessage("(Opponent): " + clientMessage.substring(6));
                         } else if (clientMessage.contains("Game: ")) {
-                            if (clientMessage.contains("ready")) GameManager.setOpponentState(true);
+                            if (clientMessage.contains("ready")) {
+                                GameManager.setOpponentState(true);
+                                gameLogs.updateLinkedList("Opponent is ready");
+                            }
                         }
 
                     }
