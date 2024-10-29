@@ -77,6 +77,10 @@ public class GameManager {
                     window.repaint();
                     window.revalidate();
 
+                    buttonPanel.add(showEnemyDesk);
+                    buttonPanel.revalidate();
+                    buttonPanel.repaint();
+
                     gameLogs.updateLinkedList("I am ready to start");
                     networkControl.sendMessage("Game: ready");
 
@@ -108,6 +112,7 @@ public class GameManager {
             System.out.println(gameField.getShipLocations().size());
             if(gameField.getShipLocations().size() == 0){
                 networkControl.sendMessage("I loose");
+                System.out.println("i loose");
             }
             gameField.repaint();
         } else {
@@ -235,7 +240,6 @@ public class GameManager {
         );
 
         buttonPanel.add(rotateShip);
-        buttonPanel.add(showEnemyDesk);
         buttonPanel.add(exit);
         window.add(buttonPanel);
     }
@@ -247,6 +251,7 @@ public class GameManager {
         window.remove(historyLogs);
         window.remove(inGameChat);
         window.remove(gameLogs);
+        window.remove(enemyField);
         window.revalidate();
         window.repaint();
         networkControl.closeConnection();
