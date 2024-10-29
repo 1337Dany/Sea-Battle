@@ -102,16 +102,17 @@ public class GameManager {
         Point attack = new Point(x, y);
         if (gameField.getShipLocations().contains(attack)) {
             networkControl.sendMessage("hit " + x + y);
-            System.out.println(((char) (y + 65)) + x + " is hitted");
-            historyLogs.addHistoryNote(((char) (y + 65)) + x + " is hitted");
+            System.out.println("Field " + ((char) (y + 65)) + x + " is hitted");
+            historyLogs.addHistoryNote("Field " + ((char) (y + 65)) + x + " is hitted");
             gameField.getShipLocations().remove(attack);
+            System.out.println(gameField.getShipLocations().size());
             if(gameField.getShipLocations().size() == 0){
                 networkControl.sendMessage("I loose");
             }
             gameField.repaint();
         } else {
             networkControl.sendMessage("miss " + x + y);
-            historyLogs.addHistoryNote(((char) (y + 65)) + x + " is empty");
+            historyLogs.addHistoryNote("Field " + ((char) (y + 65)) + x + " is empty");
         }
         myTurn = true;
     }

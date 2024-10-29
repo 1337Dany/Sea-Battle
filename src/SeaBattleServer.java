@@ -79,8 +79,9 @@ public class SeaBattleServer implements NetworkControl {
                             GameManager.amIHitOpponent(true,
                                     Integer.parseInt(clientMessage.substring(4, 5)),
                                     Integer.parseInt(clientMessage.substring(5, 6)));
-                        }else if (clientMessage.contains("I loose ")){
+                        }else if (clientMessage.contains("I loose")){
                             gameLogs.updateLinkedList("You are winner");
+                            System.out.println(" i win");
                         }
 
                     }
