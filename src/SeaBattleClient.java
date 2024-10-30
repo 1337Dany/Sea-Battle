@@ -33,7 +33,7 @@ public class SeaBattleClient implements NetworkControl {
             gameManager.addMessageToGameLogs("----Server disconected----");
 
         } else if (serverMessage.contains("Chat: ")) {
-            gameManager.addMessageToGameLogs("(Opponent): " + serverMessage.substring(6));
+            gameManager.addMessageToGameChat("(Opponent): " + serverMessage.substring(6));
 
         } else if (serverMessage.contains("ready")) {
                 gameManager.setOpponentState(true);

@@ -60,7 +60,9 @@ public class EnemyField extends JPanel {
 
                 if (col >= 0 && col < 10 && row >= 0 && row < 10) {
                     if (gameManager.isMyTurn()) {
-                        gameManager.shootTo(col, row);
+                        if (placable(new Point(col, row))) {
+                            gameManager.shootTo(col, row);
+                        }
                     }
                 }
             }

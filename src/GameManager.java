@@ -70,6 +70,13 @@ public class GameManager {
 
             boolean isShipsPlaced = false;
             while (true) {
+                if (placeShips.countShips() == 0 && gameStarted) {
+                    gameStarted = false;
+                    buttonPanel.add(showEnemyDesk);
+                    buttonPanel.repaint();
+                    gameLogs.addMessage("Game is starting!");
+                }
+
                 if (placeShips.countShips() == 0 && !isShipsPlaced) {
                     window.remove(placeShips);
                     rotateShip.removeActionListener(actionListener);
@@ -85,22 +92,15 @@ public class GameManager {
 
                     isShipsPlaced = true;
                 }
-
-                if (placeShips.countShips() == 0 && gameStarted) {
-                    gameStarted = false;
-                    buttonPanel.add(showEnemyDesk);
-                    buttonPanel.repaint();
-                    gameLogs.addMessage("Game is starting!");
-                }
-
-
             }
         }).start();
     }
-    public void addMessageToGameChat(String message){
+
+    public void addMessageToGameChat(String message) {
         inGameChat.sendMessage(message);
     }
-    public void addMessageToGameLogs(String message){
+
+    public void addMessageToGameLogs(String message) {
         gameLogs.addMessage(message);
     }
 
