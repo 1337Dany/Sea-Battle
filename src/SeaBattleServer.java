@@ -2,54 +2,52 @@ import java.io.*;
 import java.net.*;
 
 public class SeaBattleServer implements NetworkControl {
-    private static final int port = 9999;
-    public static boolean userConnected = false;
+    private final int port = 9999;
+    public boolean userConnected = false;
 
-    GameLogs gameLogs;
-    InGameChat inGameChat;
+    private GameManager gameManager;
 
-    private static final String password = "UTP_12345";
-    ServerSocket serverSocket = null;
-    Socket clientSocket = null;
-    BufferedReader in = null;
-    PrintWriter out = null;
+    private final String password = "UTP_12345";
+    private ServerSocket serverSocket = null;
+    private Socket clientSocket = null;
+    private BufferedReader in = null;
+    private PrintWriter out = null;
 
     @Override
-    public void connect(GameLogs gameLogs, InGameChat inGameChat) {
-        this.gameLogs = gameLogs;
-        this.inGameChat = inGameChat;
+    public void connect() {
 
         new Thread(() -> {
-
             try {
                 serverSocket = new ServerSocket(port);
                 while (!userConnected) {
-                    gameLogs.updateLinkedList("Waiting for client connection...");
-
+                    gameManager.addMessageToGameLogs("Waiting for client connection...");
                     clientSocket = serverSocket.accept();
+
                     //Data transmission streams
                     in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     out = new PrintWriter(clientSocket.getOutputStream(), true);
+
                     if (in.readLine().equals(password) && !userConnected) {
                         out.println("accepted");
-                        gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" tried to connect.");
+                        gameManager.addMessageToGameLogs("Client \"" + clientSocket.getInetAddress() + "\" tried to connect.");
+
                         while (true) {
                             String input = in.readLine();
                             if (input != null) {
                                 if (input.equals("I am connecting")) {
                                     userConnected = true;
-                                    gameLogs.updateLinkedList("\t----Client \"" + clientSocket.getInetAddress() + "\" connected.----");
+                                    gameManager.addMessageToGameLogs("\t----Client \"" + clientSocket.getInetAddress() + "\" connected.----");
                                     break;
                                 } else {
                                     userConnected = false;
-                                    gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" disconnected.");
+                                    gameManager.addMessageToGameLogs("Client \"" + clientSocket.getInetAddress() + "\" disconnected.");
                                     break;
                                 }
                             }
                         }
                     } else if (!in.readLine().equals(password) && !userConnected) {
                         out.println("denied");
-                        gameLogs.updateLinkedList("Client \"" + clientSocket.getInetAddress() + "\" has declined.");
+                        gameManager.addMessageToGameLogs("Client \"" + clientSocket.getInetAddress() + "\" has declined.");
                     }
                 }
 
@@ -57,43 +55,49 @@ public class SeaBattleServer implements NetworkControl {
                 try {
                     String clientMessage;
                     while ((clientMessage = in.readLine()) != null) {
-                        if (clientMessage.equals("I am disconnecting")) {
-                            gameLogs.updateLinkedList("----Client disconected----");
-                        } else if (clientMessage.contains("Chat: ")) {
-                            inGameChat.addMessage("(Opponent): " + clientMessage.substring(6));
-                        } else if (clientMessage.contains("Game: ")) {
-                            if (clientMessage.contains("ready")) {
-                                GameManager.setOpponentState(true);
-                                gameLogs.updateLinkedList("Opponent is ready");
-                            }
-                        } else if (clientMessage.contains("Shoot to: ")) {
-                            GameManager.hit(
-                                    Integer.parseInt(clientMessage.substring(10, 11)),
-                                    Integer.parseInt(clientMessage.substring(11, 12))
-                            );
-                        } else if (clientMessage.contains("miss")) {
-                            GameManager.amIHitOpponent(false,
-                                    Integer.parseInt(clientMessage.substring(5, 6)),
-                                    Integer.parseInt(clientMessage.substring(6, 7)));
-                        } else if (clientMessage.contains("hit")) {
-                            GameManager.amIHitOpponent(true,
-                                    Integer.parseInt(clientMessage.substring(4, 5)),
-                                    Integer.parseInt(clientMessage.substring(5, 6)));
-                        }else if (clientMessage.contains("I loose")){
-                            gameLogs.updateLinkedList("You are winner");
-                            System.out.println(" i win");
-                        }
+                        receivedMessage(clientMessage);
 
                     }
                 } catch (IOException e) {
-                    gameLogs.updateLinkedList("----Client disconected----");
+                    gameManager.addMessageToGameLogs("----Client disconected----");
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }).start();
 
+    }
+
+    private void receivedMessage(String clientMessage){
+        if (clientMessage.equals("I am disconnecting")) {
+            gameManager.addMessageToGameLogs("----Client disconected----");
+
+        } else if (clientMessage.contains("Chat: ")) {
+            gameManager.addMessageToGameChat("(Opponent): " + clientMessage.substring(6));
+
+        } if (clientMessage.contains("ready")) {
+                gameManager.setOpponentState(true);
+                gameManager.addMessageToGameLogs("Opponent is ready");
+
+        } else if (clientMessage.contains("Shoot to: ")) {
+            gameManager.hit(
+                    Integer.parseInt(clientMessage.substring(10, 11)),
+                    Integer.parseInt(clientMessage.substring(11, 12))
+            );
+
+        } else if (clientMessage.contains("miss")) {
+            gameManager.amIHitOpponent(false,
+                    Integer.parseInt(clientMessage.substring(5, 6)),
+                    Integer.parseInt(clientMessage.substring(6, 7)));
+
+        } else if (clientMessage.contains("hit")) {
+            gameManager.amIHitOpponent(true,
+                    Integer.parseInt(clientMessage.substring(4, 5)),
+                    Integer.parseInt(clientMessage.substring(5, 6)));
+
+        } else if (clientMessage.contains("I loose")) {
+            gameManager.addMessageToGameLogs("You are winner");
+        }
     }
 
     @Override
@@ -111,6 +115,11 @@ public class SeaBattleServer implements NetworkControl {
             out.close();
         } catch (IOException | NullPointerException ignored) {
         }
+    }
+
+    @Override
+    public void setGameManager(GameManager gameManager) {
+        this.gameManager = gameManager;
     }
 
 

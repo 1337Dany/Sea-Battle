@@ -6,46 +6,44 @@ public class MainMenu extends JFrame {
     private final JButton connect = new JButton("Connect");
     private final JButton exit = new JButton("Exit");
 
+    private boolean isConnectionPanelShown = false;
+
     MainMenu() {
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setExtendedState(MAXIMIZED_BOTH);
-        setUndecorated(true);
-        this.setBackground(Color.BLACK);
-        this.setLayout(null);
-        new SettingsSetter(this);
+        SwingUtilities.invokeLater(() -> {
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setExtendedState(MAXIMIZED_BOTH);
+            setUndecorated(true);
+            setLayout(null);
+            new SettingsSetter(this);
 
-        mainMenu();
-
-        SettingsSetter.setParametersToObjects(this);
+            mainMenu();
+        });
     }
 
     private void mainMenu() {
+
         JPanel menuPanel = new JPanel();
         drawMenu(menuPanel);
+        ConnectionMenu connectionMenu = new ConnectionMenu(menuPanel);
+        SettingsSetter.setParametersToObjects(menuPanel);
 
         host.addActionListener(e -> {
-            this.remove(menuPanel);
-            revalidate();
-            GameManager gameManager = new GameManager(new SeaBattleServer(), this);
-            this.add(menuPanel);
-            revalidate();
-            repaint();
+            remove(menuPanel);
+            new GameManager(new SeaBattleServer(), this, menuPanel);
         });
 
         connect.addActionListener(e -> {
-            ConnectionMenu connectionMenu = new ConnectionMenu(menuPanel);
-            menuPanel.add(connectionMenu);
-
-            if(ConnectionMenu.isCorrect){
-                this.remove(menuPanel);
-                revalidate();
-                GameManager gameManager = new GameManager(new SeaBattleClientOne(connectionMenu.getIp()),this);
-                this.add(menuPanel);
-                revalidate();
+            if (!isConnectionPanelShown) {
+                menuPanel.add(connectionMenu);
                 repaint();
+                isConnectionPanelShown = true;
             }
 
-            repaint();
+            if (connectionMenu.isCorrect()) {
+                remove(menuPanel);
+                revalidate();
+                new GameManager(new SeaBattleClient(), this, menuPanel);
+            }
         });
 
         exit.addActionListener(e -> System.exit(0));
@@ -59,7 +57,7 @@ public class MainMenu extends JFrame {
                 0,
                 this.getWidth(),
                 this.getHeight()
-                );
+        );
 
 
         JLabel logo = new JLabel("SEA BATTLE");
@@ -100,9 +98,6 @@ public class MainMenu extends JFrame {
         menuPanel.add(connect);
         menuPanel.add(exit);
 
-        menuPanel.setVisible(true);
-
         this.add(menuPanel);
     }
-
 }

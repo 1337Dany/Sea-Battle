@@ -1,7 +1,9 @@
 public interface NetworkControl {
-    void connect(GameLogs gameLogs, InGameChat inGameChat);
+    void connect();
 
     void sendMessage(String message);
 
     void closeConnection();
+
+    void setGameManager(GameManager gameManager);
 }

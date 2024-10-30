@@ -6,8 +6,8 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 
 public class GameField extends JPanel {
-    JFrame window;
-    PlaceShips placeShips;
+    private final GameManager gameManager;
+    private final PlaceShips placeShips;
     private final int borderSize = 40;
     private int cellSize;
 
@@ -16,16 +16,17 @@ public class GameField extends JPanel {
     private int shipToLand = 0;
     private boolean placable = true;
     private final ArrayList<Point> projections = new ArrayList<>();
-    GameField(PlaceShips placeShips, JFrame window) {
+
+    GameField(PlaceShips placeShips, GameManager gameManager) {
+        this.gameManager = gameManager;
         this.placeShips = placeShips;
-        this.window = window;
         this.setLayout(null);
         this.setBackground(Color.DARK_GRAY);
         drawField();
     }
 
     public void drawField() {
-        window.add(this);
+        gameManager.getWindow().add(this);
         this.setBounds(0, 0, 650, 650);
         cellSize = ((this.getWidth() - (borderSize * 2)) / 10);
         revalidate();
@@ -44,8 +45,8 @@ public class GameField extends JPanel {
 
                 ArrayList<Point> ship = new ArrayList<>();
 
-                if (PlaceShips.getNavy().get(shipToLand) > 0) {
-                    if (GameManager.isRotated()) {
+                if (placeShips.getNavy().get(shipToLand) > 0) {
+                    if (gameManager.isRotated()){
                         switch (shipToLand) {
                             case 0 -> {
                                 ship.add(new Point(col, row));
@@ -64,7 +65,7 @@ public class GameField extends JPanel {
                             }
                             case 3 -> ship.add(new Point(col, row));
                         }
-                    } else {
+                    } else{
                         switch (shipToLand) {
                             case 0 -> {
                                 ship.add(new Point(col, row));
@@ -87,10 +88,8 @@ public class GameField extends JPanel {
 
                     if (positionValid(ship)) {
                         shipLocations.addAll(ship);
-                        int temp = PlaceShips.getNavy().get(shipToLand);
-                        PlaceShips.getNavy().set(shipToLand, temp - 1);
-
-                        if (PlaceShips.getNavy().get(shipToLand) == 0) {
+                        placeShips.getNavy().set(shipToLand, placeShips.getNavy().get(shipToLand) - 1);
+                        if (placeShips.getNavy().get(shipToLand) == 0) {
                             shipToLand++;
                         }
                     }
@@ -111,7 +110,7 @@ public class GameField extends JPanel {
 
                 if (col >= 0 && col < 10 && row >= 0 && row < 10) {
                     projections.clear();
-                    if (GameManager.isRotated()) {
+                    if (gameManager.isRotated()) {
                         switch (shipToLand) {
                             case 0 -> {
                                 projections.add(new Point(col, row));
@@ -150,12 +149,11 @@ public class GameField extends JPanel {
                             case 3 -> projections.add(new Point(col, row));
                         }
                     }
-
                     placable = positionValid(projections);
 
-                    repaint(); // Перерисовываем проекцию под мышью
+                    repaint();
                 } else {
-                    projections.clear(); // Если вне сетки, убираем проекцию
+                    projections.clear();
                     repaint();
                 }
             }
@@ -171,11 +169,9 @@ public class GameField extends JPanel {
                     break;
                 }
                 try {
-                    // Если есть выбранная клетка, вызываем перерисовку в EDT
 
                     SwingUtilities.invokeLater(this::repaint);
 
-                    // Пауза, чтобы предотвратить перегрузку потока
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -187,19 +183,17 @@ public class GameField extends JPanel {
 
     private boolean positionValid(ArrayList<Point> newShip) {
         for (Point point : newShip) {
-
             if (point.x < 0 || point.x >= 10 || point.y < 0 || point.y >= 10) {
                 return false;
             }
-
             for (int i = -1; i <= 1; i++) {
                 for (int j = -1; j <= 1; j++) {
                     int checkCol = point.x + i;
                     int checkRow = point.y + j;
 
-                    // Проверяем, что соседняя клетка находится в пределах 10x10
+                    // Check if selected cell in a field
                     if (checkCol >= 0 && checkCol < 10 && checkRow >= 0 && checkRow < 10) {
-                        // Если в этой клетке уже есть лодка, возвращаем false
+                        // if in this field exist a ship, we return false
                         if (shipLocations.contains(new Point(checkCol, checkRow))) {
                             return false;
                         }
@@ -242,14 +236,14 @@ public class GameField extends JPanel {
                 int x = borderSize + col * cellSize;
                 int y = borderSize + row * cellSize;
 
-                for (int i = 0; i < shipLocations.size(); i++) {
-                    if (shipLocations.get(i) != null && shipLocations.get(i).x == col && shipLocations.get(i).y == row) {
+                for (Point shipLocation : shipLocations) {
+                    if (shipLocation != null && shipLocation.x == col && shipLocation.y == row) {
                         graphics2D.setColor(Color.BLUE); // Цвет подсветки
                         graphics2D.fillRect(x, y, cellSize, cellSize);
                     }
                 }
-                for (int i = 0; i < projections.size(); i++) {
-                    if (projections.get(i) != null && projections.get(i).x == col && projections.get(i).y == row) {
+                for (Point projection : projections) {
+                    if (projection != null && projection.x == col && projection.y == row) {
                         if (placable) {
                             graphics2D.setColor(new Color(0, 0, 255, 128));
                         } else {

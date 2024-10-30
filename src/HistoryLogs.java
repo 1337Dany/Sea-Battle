@@ -3,14 +3,14 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class HistoryLogs extends JPanel {
-    GameManager gameManager;
-    DefaultTableModel defaultTableModel;
-    HistoryLogs(GameManager gameManager){
+    private final GameManager gameManager;
+    private DefaultTableModel defaultTableModel;
+
+    HistoryLogs(GameManager gameManager) {
         this.gameManager = gameManager;
     }
 
-    public void drawHistory(){
-
+    public void drawHistory() {
         this.setLayout(null);
         this.setBackground(Color.DARK_GRAY);
 
@@ -28,8 +28,8 @@ public class HistoryLogs extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table);
 
 
-        table.setIntercellSpacing(new Dimension(0, 0)); // Убирает отступы между ячейками
-        table.setOpaque(false); // Убирает фон таблицы
+        table.setIntercellSpacing(new Dimension(0, 0));
+        table.setOpaque(false);
 
 
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
@@ -46,8 +46,8 @@ public class HistoryLogs extends JPanel {
         scrollPane.setBounds(
                 60,
                 65,
-                (int) (this.getWidth()/1.2),
-                (int) (this.getHeight()/1.2)
+                (int) (this.getWidth() / 1.2),
+                (int) (this.getHeight() / 1.2)
         );
 
         this.add(scrollPane);
@@ -55,7 +55,7 @@ public class HistoryLogs extends JPanel {
         gameManager.getWindow().add(this);
     }
 
-    public void addHistoryNote(String note){
+    public void addHistoryNote(String note) {
         defaultTableModel.addRow(new Object[]{note});
     }
 
@@ -67,16 +67,16 @@ public class HistoryLogs extends JPanel {
         int arc = 100;
 
         graphics2D.setColor(Color.WHITE);
-        graphics2D.fillRoundRect(strokeWidth, strokeWidth,
-                this.getWidth()-strokeWidth*2, this.getHeight()-strokeWidth*2,
+        graphics2D.fillRoundRect(strokeWidth, 10,
+                this.getWidth() - strokeWidth * 2, this.getHeight() - strokeWidth * 2,
                 arc, arc);
 
         graphics2D.setStroke(new BasicStroke(strokeWidth));
 
         graphics2D.setColor(Color.ORANGE);
         graphics2D.drawRoundRect(
-                strokeWidth, strokeWidth,
-                this.getWidth()-strokeWidth*2, this.getHeight()-strokeWidth*2,
+                strokeWidth, 10,
+                this.getWidth() - strokeWidth * 2, this.getHeight() - strokeWidth * 2,
                 arc, arc);
     }
 }

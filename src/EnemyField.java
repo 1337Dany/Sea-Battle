@@ -6,8 +6,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 
 public class EnemyField extends JPanel {
-    JFrame window;
-    GameManager gameManager;
+    private final GameManager gameManager;
 
     private final ArrayList<Point> shipLocations = new ArrayList<>();
 
@@ -18,14 +17,19 @@ public class EnemyField extends JPanel {
     private final int borderSize = 40;
     private final int cellSize;
 
-    EnemyField(GameManager gameManager, JFrame window) {
+    EnemyField(GameManager gameManager) {
         this.gameManager = gameManager;
-        this.window = window;
         this.setBounds(0, 0, 650, 650);
         cellSize = ((this.getWidth() - (borderSize * 2)) / 10);
+        SettingsSetter.ignoreSettingParametersToObjects(this);
         this.setBackground(Color.DARK_GRAY);
-        window.add(this);
+        gameManager.getWindow().add(this);
         this.setVisible(false);
+        drawField();
+
+    }
+
+    private void drawField() {
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
@@ -54,8 +58,10 @@ public class EnemyField extends JPanel {
                 int col = adjX / cellSize;
                 int row = adjY / cellSize;
 
-                if(GameManager.myTurn) {
-                    GameManager.shootTo(col, row);
+                if (col >= 0 && col < 10 && row >= 0 && row < 10) {
+                    if (gameManager.isMyTurn()) {
+                        gameManager.shootTo(col, row);
+                    }
                 }
             }
         });
@@ -110,16 +116,16 @@ public class EnemyField extends JPanel {
                 int x = borderSize + col * cellSize;
                 int y = borderSize + row * cellSize;
 
-                for (int i = 0; i < shipLocations.size(); i++) {
-                    if (shipLocations.get(i) != null && shipLocations.get(i).x == col && shipLocations.get(i).y == row) {
-                        graphics2D.setColor(Color.BLUE); // Цвет подсветки
+                for (Point shipLocation : shipLocations) {
+                    if (shipLocation != null && shipLocation.x == col && shipLocation.y == row) {
+                        graphics2D.setColor(Color.BLUE);
                         graphics2D.fillRect(x, y, cellSize, cellSize);
                     }
                 }
 
                 for (Point emptyLocation : openedLocations) {
                     if (emptyLocation != null && emptyLocation.x == col && emptyLocation.y == row) {
-                        graphics2D.setColor(Color.RED); // Цвет подсветки
+                        graphics2D.setColor(Color.RED);
                         graphics2D.fillRect(x, y, cellSize, cellSize);
                     }
                 }

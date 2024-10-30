@@ -1,9 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class SettingsSetter {
 
-    public static Font font;
+    private static Font font;
+    private static ArrayList<Component> ignoredComponents = new ArrayList<>();
 
     public SettingsSetter(MainMenu window) {
 
@@ -19,12 +21,18 @@ public class SettingsSetter {
     }
 
     public static void setParametersToObjects(Component component) {
-        if(!(component.getFont() == null)){
-            component.setFont(font.deriveFont((float) component.getFont().getSize()));
+        if (!ignoredComponents.contains(component)) {
+            if (!(component.getFont() == null)) {
+                component.setFont(font.deriveFont((float) component.getFont().getSize()));
+            }
+            component.setVisible(true);
         }
-        component.setVisible(true);
         for (Component child : ((Container) component).getComponents()) {
             setParametersToObjects(child);
         }
+    }
+
+    public static void ignoreSettingParametersToObjects(Component component) {
+        ignoredComponents.add(component);
     }
 }

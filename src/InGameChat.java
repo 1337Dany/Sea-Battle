@@ -5,16 +5,16 @@ import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 
 public class InGameChat extends JPanel {
-    GameManager gameManager;
-    LinkedList<JLabel> labelList = new LinkedList<>();
-    JTextArea message = new JTextArea();
+    private final GameManager gameManager;
+    private final LinkedList<JLabel> labelList = new LinkedList<>();
+    private final JTextArea message = new JTextArea();
 
     InGameChat(GameManager gameManager) {
         this.gameManager = gameManager;
+
     }
 
     public void drawInGameChat() {
-
         this.setLayout(null);
         this.setBackground(Color.DARK_GRAY);
 
@@ -33,13 +33,11 @@ public class InGameChat extends JPanel {
 
         message.setFont(message.getFont().deriveFont(15.0f));
         message.setBounds(
-                55+inGameChatLogo.getWidth(),
+                55 + inGameChatLogo.getWidth(),
                 60,
-                (int) (this.getWidth()/1.2),
+                (int) (this.getWidth() / 1.2),
                 30
         );
-        message.setLineWrap(false);
-        message.setWrapStyleWord(false);
         this.add(message);
         addLinkedList();
         this.add(inGameChatLogo);
@@ -70,7 +68,7 @@ public class InGameChat extends JPanel {
                         event.consume();
                         String checkMessage = message.getText().trim();
                         if (!checkMessage.isEmpty()) {
-                            addMessage("(Me): " + checkMessage);
+                            sendMessage("(Me): " + checkMessage);
                             message.setText("");
                             networkControl.sendMessage("Chat: " + checkMessage);
                         }
@@ -80,7 +78,7 @@ public class InGameChat extends JPanel {
         }).start();
     }
 
-    public void addMessage(String newMessage) {
+    public void sendMessage(String newMessage) {
         for (int i = labelList.size() - 1; i > 0; i--) {
             labelList.get(i).setText(labelList.get(i - 1).getText());
         }
@@ -97,7 +95,7 @@ public class InGameChat extends JPanel {
         int arc = 100;
 
         graphics2D.setColor(Color.WHITE);
-        graphics2D.fillRoundRect(strokeWidth, strokeWidth,
+        graphics2D.fillRoundRect(strokeWidth, 10,
                 this.getWidth() - strokeWidth * 2, this.getHeight() - strokeWidth * 2,
                 arc, arc);
 
@@ -105,7 +103,7 @@ public class InGameChat extends JPanel {
 
         graphics2D.setColor(Color.ORANGE);
         graphics2D.drawRoundRect(
-                strokeWidth, strokeWidth,
+                strokeWidth, 10,
                 this.getWidth() - strokeWidth * 2, this.getHeight() - strokeWidth * 2,
                 arc, arc);
     }

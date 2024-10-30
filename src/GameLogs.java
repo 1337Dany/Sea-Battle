@@ -3,15 +3,15 @@ import java.awt.*;
 import java.util.LinkedList;
 
 public class GameLogs extends JPanel {
-    GameManager gameManager;
-    LinkedList<JLabel> labelList = new LinkedList<>();
+    private final GameManager gameManager;
+    private final LinkedList<JLabel> labelList = new LinkedList<>();
     GameLogs(GameManager gameManager){
         this.gameManager = gameManager;
     }
 
     public void drawGameLogs(){
-
         this.setLayout(null);
+        this.setOpaque(true);
         this.setBackground(Color.DARK_GRAY);
 
         JLabel gameLogsLogo = new JLabel("game logs");
@@ -48,7 +48,7 @@ public class GameLogs extends JPanel {
         }
     }
 
-    public void updateLinkedList(String newMessage){
+    public void addMessage(String newMessage){
         for (int i =  labelList.size()-1; i > 0; i--) {
             labelList.get(i).setText(labelList.get(i-1).getText());
         }
@@ -65,7 +65,7 @@ public class GameLogs extends JPanel {
         int arc = 100;
 
         graphics2D.setColor(Color.WHITE);
-        graphics2D.fillRoundRect(strokeWidth, strokeWidth,
+        graphics2D.fillRoundRect(strokeWidth, 10,
                 this.getWidth()-strokeWidth*2, this.getHeight()-strokeWidth*2,
                 arc, arc);
 
@@ -73,7 +73,7 @@ public class GameLogs extends JPanel {
 
         graphics2D.setColor(Color.ORANGE);
         graphics2D.drawRoundRect(
-                strokeWidth, strokeWidth,
+                strokeWidth, 10,
                 this.getWidth()-strokeWidth*2, this.getHeight()-strokeWidth*2,
                 arc, arc);
     }

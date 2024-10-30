@@ -2,28 +2,21 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ConnectionMenu extends JPanel {
-    JTextArea ip = new JTextArea();
+    private final JTextArea ip = new JTextArea();
 
-    JButton checkIPButton = new JButton("Check IP");
-    JPanel menuPanel;
-    static boolean isCorrect = false;
+    private final JButton checkIPButton = new JButton("Check IP");
+    private final JPanel menuPanel;
+
+    private boolean isCorrect;
 
     ConnectionMenu(JPanel menuPanel) {
         this.menuPanel = menuPanel;
         drawPanel();
 
-
-        checkIPButton.addActionListener(e -> {
-            if(SeaBattleClientOne.checkConnection(ip.getText())){
-            //if (ip.getText().equals("test")) {
-                isCorrect = true;
-                repaint();
-            }else {
-                isCorrect = false;
-                repaint();
-            }
-        });
-
+            checkIPButton.addActionListener(e -> {
+                    isCorrect = SeaBattleClient.checkConnection(ip.getText());
+                    repaint();
+            });
 
     }
 
@@ -104,5 +97,9 @@ public class ConnectionMenu extends JPanel {
 
     public String getIp() {
         return ip.getText();
+    }
+
+    public boolean isCorrect() {
+        return isCorrect;
     }
 }

@@ -3,16 +3,16 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class PlaceShips extends JPanel {
-    GameManager gameManager;
+    private final GameManager gameManager;
 
-    private static final ArrayList<Integer> navy = new ArrayList<>();
+    private final ArrayList<Integer> navy = new ArrayList<>();
     private final JLabel linkors = new JLabel();
     private final JLabel cruisers = new JLabel();
     private final JLabel destroyer = new JLabel();
     private final JLabel submarines = new JLabel();
     private final ArrayList<JLabel> labels = new ArrayList<>();
 
-    PlaceShips( GameManager gameManager) {
+    PlaceShips(GameManager gameManager) {
         this.gameManager = gameManager;
         createNavy();
     }
@@ -26,8 +26,8 @@ public class PlaceShips extends JPanel {
 
     public int countShips() {
         int result = 0;
-        for (int i = 0; i < PlaceShips.getNavy().size(); i++) {
-            result += PlaceShips.getNavy().get(i);
+        for (Integer integer : navy) {
+            result += integer;
         }
         return result;
     }
@@ -71,7 +71,7 @@ public class PlaceShips extends JPanel {
 
             labels.get(i).setBounds(
                     60,
-                    (int) (this.getHeight() / 5) * (i + 1),
+                    (this.getHeight() / 5) * (i + 1),
                     (int) (this.getWidth() / 1.2),
                     (int) (this.getHeight() * 0.05)
             );
@@ -93,11 +93,11 @@ public class PlaceShips extends JPanel {
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics;
-        int strokeWidth = 10;
-        int arc = 100;
 
         graphics2D.setColor(Color.WHITE);
-        graphics2D.fillRoundRect(strokeWidth, strokeWidth,
+        int strokeWidth = 10;
+        int arc = 100;
+        graphics2D.fillRoundRect(strokeWidth, 10,
                 this.getWidth() - strokeWidth * 2, this.getHeight() - strokeWidth * 2,
                 arc, arc);
 
@@ -105,12 +105,12 @@ public class PlaceShips extends JPanel {
 
         graphics2D.setColor(Color.ORANGE);
         graphics2D.drawRoundRect(
-                strokeWidth, strokeWidth,
+                strokeWidth, 10,
                 this.getWidth() - strokeWidth * 2, this.getHeight() - strokeWidth * 2,
                 arc, arc);
     }
 
-    public static ArrayList<Integer> getNavy() {
+    public ArrayList<Integer> getNavy() {
         return navy;
     }
 }

@@ -3,43 +3,45 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class GameManager {
-    JFrame window;
+    private final JFrame window;
+    private final JPanel menuPanel;
+    private JPanel buttonPanel;
+    private GameField gameField;
+    private EnemyField enemyField;
+    private PlaceShips placeShips;
+    private HistoryLogs historyLogs;
+    private InGameChat inGameChat;
+    private GameLogs gameLogs;
 
-    JPanel buttonPanel;
-    static GameField gameField;
-    static EnemyField enemyField;
-    PlaceShips placeShips;
-    static HistoryLogs historyLogs;
-    InGameChat inGameChat;
-    GameLogs gameLogs;
+    private final JButton rotateShip = new JButton("Rotate");
+    private boolean rotated = false;
+    private final JButton showEnemyDesk = new JButton("Show enemy desk");
+    private boolean isEnemyReady = false;
+    private final JButton exit = new JButton("Surrender looser");
+    private final NetworkControl networkControl;
 
-    JButton rotateShip = new JButton("Rotate");
+    private boolean gameStarted = false;
 
-    private static boolean rotated = false;
+    private boolean myTurn;
 
-    JButton showEnemyDesk = new JButton("Show enemy desk");
-    JButton exit = new JButton("Surrender looser");
-    static NetworkControl networkControl;
-
-    private static boolean gameStarted = false;
-    public static boolean myTurn = false;
-
-    GameManager(SeaBattleClientOne networkControl, JFrame window) {
+    GameManager(SeaBattleServer networkControl, JFrame window, JPanel menuPanel) {
         this.networkControl = networkControl;
         this.window = window;
+        this.menuPanel = menuPanel;
         startGame();
-        networkControl.connect(gameLogs, inGameChat);
-        myTurn = false;
+        networkControl.setGameManager(this);
+        networkControl.connect();
+        myTurn = true;
     }
 
-    GameManager(SeaBattleServer networkControl, JFrame window) {
-        this.window = window;
+    GameManager(SeaBattleClient networkControl, JFrame window, JPanel menuPanel) {
         this.networkControl = networkControl;
+        this.window = window;
+        this.menuPanel = menuPanel;
         startGame();
-        window.revalidate();
-        window.repaint();
-        networkControl.connect(gameLogs, inGameChat);
-        myTurn = true;
+        networkControl.setGameManager(this);
+        networkControl.connect();
+        myTurn = false;
     }
 
     private void startGame() {
@@ -64,9 +66,7 @@ public class GameManager {
                 enemyField.revalidate();
                 enemyField.repaint();
             });
-            exit.addActionListener(event -> {
-                closeAll();
-            });
+            exit.addActionListener(event -> closeAll());
 
             boolean isShipsPlaced = false;
             while (true) {
@@ -77,68 +77,75 @@ public class GameManager {
                     window.repaint();
                     window.revalidate();
 
-                    buttonPanel.add(showEnemyDesk);
                     buttonPanel.revalidate();
                     buttonPanel.repaint();
 
-                    gameLogs.updateLinkedList("I am ready to start");
-                    networkControl.sendMessage("Game: ready");
+                    gameLogs.addMessage("I am ready to start");
+                    networkControl.sendMessage("ready");
 
                     isShipsPlaced = true;
                 }
 
                 if (placeShips.countShips() == 0 && gameStarted) {
                     gameStarted = false;
-                    gameLogs.updateLinkedList("Game is starting!");
+                    buttonPanel.add(showEnemyDesk);
+                    buttonPanel.repaint();
+                    gameLogs.addMessage("Game is starting!");
                 }
+
 
             }
         }).start();
     }
+    public void addMessageToGameChat(String message){
+        inGameChat.sendMessage(message);
+    }
+    public void addMessageToGameLogs(String message){
+        gameLogs.addMessage(message);
+    }
 
-    public static void shootTo(int x, int y) {
+    public void shootTo(int x, int y) {
         networkControl.sendMessage("Shoot to: " + x + y);
         historyLogs.addHistoryNote("Shooting is conducted to " + ((char) (y + 65)) + x);
         myTurn = false;
     }
 
-    public static void hit(int x, int y) {
+    public void hit(int x, int y) {
         Point attack = new Point(x, y);
         if (gameField.getShipLocations().contains(attack)) {
             networkControl.sendMessage("hit " + x + y);
-            System.out.println("Field " + ((char) (y + 65)) + x + " is hitted");
-            historyLogs.addHistoryNote("Field " + ((char) (y + 65)) + x + " is hitted");
+            historyLogs.addHistoryNote("Opponent is hitted your ship!");
             gameField.getShipLocations().remove(attack);
-            System.out.println(gameField.getShipLocations().size());
-            if(gameField.getShipLocations().size() == 0){
+            if (gameField.getShipLocations().size() == 0) {
                 networkControl.sendMessage("I loose");
-                System.out.println("i loose");
+                addMessageToGameLogs("You loose");
             }
             gameField.repaint();
         } else {
             networkControl.sendMessage("miss " + x + y);
-            historyLogs.addHistoryNote("Field " + ((char) (y + 65)) + x + " is empty");
+            historyLogs.addHistoryNote("Opponent is missed!");
         }
         myTurn = true;
     }
 
-    public static void amIHitOpponent(boolean bool, int x, int y) {
+    public void amIHitOpponent(boolean bool, int x, int y) {
         if (bool) {
             enemyField.getShipLocations().add(new Point(x, y));
             historyLogs.addHistoryNote("Field " + ((char) (y + 65)) + x + " is hitted");
         } else {
             enemyField.getOpenedLocations().add(new Point(x, y));
-            historyLogs.addHistoryNote("Field " + ((char) (y + 65)) + x+ " is empty");
+            historyLogs.addHistoryNote("Field " + ((char) (y + 65)) + x + " is empty");
         }
     }
 
     private void drawAll() {
-
-
         placeShips = new PlaceShips(this);
-
-        gameField = new GameField(placeShips, window);
-        enemyField = new EnemyField(this, window);
+        gameField = new GameField(placeShips, this);
+        enemyField = new EnemyField(this);
+        historyLogs = new HistoryLogs(this);
+        inGameChat = new InGameChat(this);
+        inGameChat.messageCheckingThread(networkControl);
+        gameLogs = new GameLogs(this);
 
         placeShips.setBounds(
                 gameField.getX() + gameField.getWidth() + 200,
@@ -152,7 +159,6 @@ public class GameManager {
         gameField.placeShips();
 
 
-        historyLogs = new HistoryLogs(this);
         historyLogs.setBounds(
                 gameField.getX() + gameField.getWidth() + 200,
                 0,
@@ -161,7 +167,6 @@ public class GameManager {
         );
         historyLogs.drawHistory();
 
-        inGameChat = new InGameChat(this);
         inGameChat.setBounds(
                 gameField.getX() + gameField.getWidth(),
                 500,
@@ -169,9 +174,7 @@ public class GameManager {
                 window.getHeight() - 500
         );
         inGameChat.drawInGameChat();
-        inGameChat.messageCheckingThread(networkControl);
 
-        gameLogs = new GameLogs(this);
         gameLogs.setBounds(
                 0,
                 gameField.getHeight(),
@@ -193,7 +196,7 @@ public class GameManager {
                 int arc = 100;
 
                 graphics2D.setColor(Color.DARK_GRAY);
-                graphics2D.fillRoundRect(strokeWidth, strokeWidth,
+                graphics2D.fillRoundRect(strokeWidth, 10,
                         this.getWidth() - strokeWidth * 2, this.getHeight() - strokeWidth * 2,
                         arc, arc);
 
@@ -201,7 +204,7 @@ public class GameManager {
 
                 graphics2D.setColor(Color.CYAN);
                 graphics2D.drawRoundRect(
-                        strokeWidth, strokeWidth,
+                        strokeWidth, 10,
                         this.getWidth() - strokeWidth * 2, this.getHeight() - strokeWidth * 2,
                         arc, arc);
             }
@@ -256,17 +259,22 @@ public class GameManager {
         window.repaint();
         networkControl.closeConnection();
 
+        window.add(menuPanel);
     }
 
     public JFrame getWindow() {
         return window;
     }
 
-    public static boolean isRotated() {
+    public boolean isRotated() {
         return rotated;
     }
 
-    public static void setOpponentState(boolean opponentState) {
+    public void setOpponentState(boolean opponentState) {
         gameStarted = opponentState;
+    }
+
+    public boolean isMyTurn() {
+        return myTurn;
     }
 }
