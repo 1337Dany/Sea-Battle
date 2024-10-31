@@ -14,34 +14,33 @@ public class GameManager {
     private GameLogs gameLogs;
 
     private final JButton rotateShip = new JButton("Rotate");
-    private boolean rotated = false;
+    private boolean rotated = false; //Put in cpp
     private final JButton showEnemyDesk = new JButton("Show enemy desk");
-    private boolean isEnemyReady = false;
     private final JButton exit = new JButton("Surrender looser");
-    private final NetworkControl networkControl;
+    private final NetworkControl networkControl; //Put in cpp
 
-    private boolean gameStarted = false;
+    private boolean gameStarted = false; //Put in cpp
 
-    private boolean myTurn;
+    private boolean myTurn; //Put in cpp
 
     GameManager(SeaBattleServer networkControl, JFrame window, JPanel menuPanel) {
         this.networkControl = networkControl;
         this.window = window;
         this.menuPanel = menuPanel;
-        startGame();
-        networkControl.setGameManager(this);
-        networkControl.connect();
-        myTurn = true;
+        startGame(); //Put in cpp
+        networkControl.setGameManager(this);//Put in cpp
+        networkControl.connect();//Put in cpp
+        myTurn = true;//Put in cpp
     }
 
     GameManager(SeaBattleClient networkControl, JFrame window, JPanel menuPanel) {
         this.networkControl = networkControl;
         this.window = window;
         this.menuPanel = menuPanel;
-        startGame();
-        networkControl.setGameManager(this);
-        networkControl.connect();
-        myTurn = false;
+        startGame();//Put in cpp
+        networkControl.setGameManager(this);//Put in cpp
+        networkControl.connect();//Put in cpp
+        myTurn = false;//Put in cpp
     }
 
     private void startGame() {
@@ -54,7 +53,7 @@ public class GameManager {
         new Thread(() -> {
             ActionListener actionListener = e -> rotated = !rotated;
             rotateShip.addActionListener(actionListener);
-            showEnemyDesk.addActionListener(event -> {
+            showEnemyDesk.addActionListener(event -> { //Put in cpp
                 if (enemyField.isVisible()) {
                     enemyField.setVisible(false);
                     gameField.setVisible(true);
@@ -68,10 +67,10 @@ public class GameManager {
             });
             exit.addActionListener(event -> closeAll());
 
-            boolean isShipsPlaced = false;
+            boolean isShipsPlaced = false;//Put in cpp
             while (true) {
-                if (placeShips.countShips() == 0 && gameStarted) {
-                    gameStarted = false;
+                if (placeShips.countShips()/*Put in cpp*/ == 0 && gameStarted) {
+                    gameStarted = false;//Put in cpp
                     buttonPanel.add(showEnemyDesk);
                     buttonPanel.repaint();
                     gameLogs.addMessage("Game is starting!");
@@ -106,16 +105,16 @@ public class GameManager {
 
     public void shootTo(int x, int y) {
         networkControl.sendMessage("Shoot to: " + x + y);
-        historyLogs.addHistoryNote("Shooting is conducted to " + ((char) (y + 65)) + x);
+        historyLogs.addHistoryNote("Shooting is conducted to " + ((char) (y + 65)) + x/*Put in cpp*/);
         myTurn = false;
     }
 
     public void hit(int x, int y) {
         Point attack = new Point(x, y);
-        if (gameField.getShipLocations().contains(attack)) {
-            networkControl.sendMessage("hit " + x + y);
+        if (gameField.getShipLocations().contains(attack)/*Put in cpp*/) {
+            networkControl.sendMessage("hit " + x + y);/*Put in cpp*/
             historyLogs.addHistoryNote("Opponent is hitted your ship!");
-            gameField.getShipLocations().remove(attack);
+            gameField.getShipLocations().remove(attack);/*Put in cpp*/
             if (gameField.getShipLocations().size() == 0) {
                 networkControl.sendMessage("I loose");
                 addMessageToGameLogs("You loose");
@@ -130,10 +129,10 @@ public class GameManager {
 
     public void amIHitOpponent(boolean bool, int x, int y) {
         if (bool) {
-            enemyField.getShipLocations().add(new Point(x, y));
+            enemyField.getShipLocations().add(new Point(x, y));/*Put in cpp*/
             historyLogs.addHistoryNote("Field " + ((char) (y + 65)) + x + " is hitted");
         } else {
-            enemyField.getOpenedLocations().add(new Point(x, y));
+            enemyField.getOpenedLocations().add(new Point(x, y));/*Put in cpp*/
             historyLogs.addHistoryNote("Field " + ((char) (y + 65)) + x + " is empty");
         }
     }

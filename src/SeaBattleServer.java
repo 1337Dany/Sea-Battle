@@ -2,12 +2,12 @@ import java.io.*;
 import java.net.*;
 
 public class SeaBattleServer implements NetworkControl {
-    private final int port = 9999;
-    public boolean userConnected = false;
+    private final int port = 9999;/*Put in cpp*/
+    public boolean userConnected = false;/*Put in cpp*/
 
     private GameManager gameManager;
 
-    private final String password = "UTP_12345";
+    private final String password = "UTP_12345";/*Put in cpp*/
     private ServerSocket serverSocket = null;
     private Socket clientSocket = null;
     private BufferedReader in = null;
@@ -27,7 +27,7 @@ public class SeaBattleServer implements NetworkControl {
                     in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-                    if (in.readLine().equals(password) && !userConnected) {
+                    if (in.readLine().equals(password) && !userConnected) {/*Put in cpp*/
                         out.println("accepted");
                         gameManager.addMessageToGameLogs("Client \"" + clientSocket.getInetAddress() + "\" tried to connect.");
 
@@ -52,7 +52,7 @@ public class SeaBattleServer implements NetworkControl {
                 }
 
 
-                try {
+                try {/*Put in cpp*/
                     String clientMessage;
                     while ((clientMessage = in.readLine()) != null) {
                         receivedMessage(clientMessage);
@@ -68,7 +68,7 @@ public class SeaBattleServer implements NetworkControl {
 
     }
 
-    private void receivedMessage(String clientMessage){
+    private void receivedMessage(String clientMessage){/*Put in cpp*/
         if (clientMessage.equals("I am disconnecting")) {
             gameManager.addMessageToGameLogs("----Client disconected----");
 
@@ -101,12 +101,12 @@ public class SeaBattleServer implements NetworkControl {
     }
 
     @Override
-    public void sendMessage(String message) {
+    public void sendMessage(String message) {/*Put in cpp*/
         out.println(message);
     }
 
     @Override
-    public void closeConnection() {
+    public void closeConnection() {/*Put in cpp*/
         try {
             out.println("I am disconnecting");
             serverSocket.close();
