@@ -9,9 +9,6 @@ public class GameField extends JPanel {
     private final GameManager gameManager;
     private final PlaceShips placeShips;
 
-    private final ArrayList<Point> shipLocations = new ArrayList<>();
-    private final ArrayList<Point> projections = new ArrayList<>();
-
     GameField(PlaceShips placeShips, GameManager gameManager) {
         this.gameManager = gameManager;
         this.placeShips = placeShips;
@@ -37,51 +34,14 @@ public class GameField extends JPanel {
                 int col = adjX / gameManager.jniLogicManager.cellSize();
                 int row = adjY / gameManager.jniLogicManager.cellSize();
 
-                ArrayList<Point> ship = new ArrayList<>();
+                System.out.println(gameManager.jniLogicManager.getShipSize());
 
                 if (gameManager.jniLogicManager.getNavy(gameManager.jniLogicManager.getShipToLand()) > 0) {
-                    if (gameManager.jniLogicManager.isRotated()) {
-                        switch (gameManager.jniLogicManager.getShipToLand()) {
-                            case 0 -> {
-                                ship.add(new Point(col, row));
-                                ship.add(new Point(col, row - 1));
-                                ship.add(new Point(col, row - 2));
-                                ship.add(new Point(col, row - 3));
-                            }
-                            case 1 -> {
-                                ship.add(new Point(col, row));
-                                ship.add(new Point(col, row - 1));
-                                ship.add(new Point(col, row - 2));
-                            }
-                            case 2 -> {
-                                ship.add(new Point(col, row));
-                                ship.add(new Point(col, row - 1));
-                            }
-                            case 3 -> ship.add(new Point(col, row));
-                        }
-                    } else {
-                        switch (gameManager.jniLogicManager.getShipToLand()) {
-                            case 0 -> {
-                                ship.add(new Point(col, row));
-                                ship.add(new Point(col - 1, row));
-                                ship.add(new Point(col - 2, row));
-                                ship.add(new Point(col - 3, row));
-                            }
-                            case 1 -> {
-                                ship.add(new Point(col, row));
-                                ship.add(new Point(col - 1, row));
-                                ship.add(new Point(col - 2, row));
-                            }
-                            case 2 -> {
-                                ship.add(new Point(col, row));
-                                ship.add(new Point(col - 1, row));
-                            }
-                            case 3 -> ship.add(new Point(col, row));
-                        }
-                    }
 
-                    if (positionValid(ship)) {
-                        shipLocations.addAll(ship);
+                    System.out.println(gameManager.jniLogicManager.positionValid());
+
+                    if (gameManager.jniLogicManager.positionValid()) {
+                        gameManager.jniLogicManager.addAll();
                         gameManager.jniLogicManager.setNavy(gameManager.jniLogicManager.getShipToLand(), gameManager.jniLogicManager.getNavy(gameManager.jniLogicManager.getShipToLand()) - 1);
                         if (gameManager.jniLogicManager.getNavy(gameManager.jniLogicManager.getShipToLand()) == 0) {
                             gameManager.jniLogicManager.setShipToLand(gameManager.jniLogicManager.getShipToLand() + 1);
@@ -103,51 +63,61 @@ public class GameField extends JPanel {
                 int row = adjY / gameManager.jniLogicManager.cellSize();
 
                 if (col >= 0 && col < 10 && row >= 0 && row < 10) {
-                    projections.clear();
+                    gameManager.jniLogicManager.addShip(0,col,row);
+                    gameManager.jniLogicManager.addShip(1,col,row);
+                    gameManager.jniLogicManager.addShip(2,col,row);
+                    gameManager.jniLogicManager.addShip(3,col,row);
+                    gameManager.jniLogicManager.setShipSize(0);
                     if (gameManager.jniLogicManager.isRotated()) {
                         switch (gameManager.jniLogicManager.getShipToLand()) {
                             case 0 -> {
-                                projections.add(new Point(col, row));
-                                projections.add(new Point(col, row - 1));
-                                projections.add(new Point(col, row - 2));
-                                projections.add(new Point(col, row - 3));
+                                gameManager.jniLogicManager.addShip(0,col, row);
+                                gameManager.jniLogicManager.addShip(1,col, row - 1);
+                                gameManager.jniLogicManager.addShip(2,col, row - 2);
+                                gameManager.jniLogicManager.addShip(3,col, row - 3);
                             }
                             case 1 -> {
-                                projections.add(new Point(col, row));
-                                projections.add(new Point(col, row - 1));
-                                projections.add(new Point(col, row - 2));
+                                gameManager.jniLogicManager.addShip(0,col, row);
+                                gameManager.jniLogicManager.addShip(1,col, row - 1);
+                                gameManager.jniLogicManager.addShip(2,col, row - 2);
                             }
                             case 2 -> {
-                                projections.add(new Point(col, row));
-                                projections.add(new Point(col, row - 1));
+                                gameManager.jniLogicManager.addShip(0,col, row);
+                                gameManager.jniLogicManager.addShip(1,col, row - 1);
                             }
-                            case 3 -> projections.add(new Point(col, row));
+                            case 3 -> {
+                                gameManager.jniLogicManager.addShip(0,col, row);
+                            }
                         }
                     } else {
                         switch (gameManager.jniLogicManager.getShipToLand()) {
                             case 0 -> {
-                                projections.add(new Point(col, row));
-                                projections.add(new Point(col - 1, row));
-                                projections.add(new Point(col - 2, row));
-                                projections.add(new Point(col - 3, row));
+                                gameManager.jniLogicManager.addShip(0,col, row);
+                                gameManager.jniLogicManager.addShip(1,col - 1, row);
+                                gameManager.jniLogicManager.addShip(2,col - 2, row);
+                                gameManager.jniLogicManager.addShip(3,col - 3, row);
+                                gameManager.jniLogicManager.setShipSize(4);
                             }
                             case 1 -> {
-                                projections.add(new Point(col, row));
-                                projections.add(new Point(col - 1, row));
-                                projections.add(new Point(col - 2, row));
+                                gameManager.jniLogicManager.addShip(0,col, row);
+                                gameManager.jniLogicManager.addShip(1,col - 1, row);
+                                gameManager.jniLogicManager.addShip(2,col - 2, row);
+                                gameManager.jniLogicManager.setShipSize(3);
                             }
                             case 2 -> {
-                                projections.add(new Point(col, row));
-                                projections.add(new Point(col - 1, row));
+                                gameManager.jniLogicManager.addShip(0,col, row);
+                                gameManager.jniLogicManager.addShip(1,col - 1, row);
+                                gameManager.jniLogicManager.setShipSize(2);
                             }
-                            case 3 -> projections.add(new Point(col, row));
+                            case 3 -> {
+                                gameManager.jniLogicManager.addShip(0,col, row);
+                                gameManager.jniLogicManager.setShipSize(1);
+                            }
                         }
                     }
-                    gameManager.jniLogicManager.setPlacable(positionValid(projections));
 
                     repaint();
                 } else {
-                    projections.clear();
                     repaint();
                 }
             }
@@ -159,6 +129,8 @@ public class GameField extends JPanel {
                 if (placeShips.countShips() == 0) {
                     removeMouseListener(mouseAdapter);
                     removeMouseMotionListener(mouseMotionAdapter);
+                    revalidate();
+                    repaint();
                     this.invalidate();
                     break;
                 }
@@ -173,29 +145,6 @@ public class GameField extends JPanel {
             }
 
         }).start();
-    }
-
-    private boolean positionValid(ArrayList<Point> newShip) {
-        for (Point point : newShip) {
-            if (point.x < 0 || point.x >= 10 || point.y < 0 || point.y >= 10) {
-                return false;
-            }
-            for (int i = -1; i <= 1; i++) {
-                for (int j = -1; j <= 1; j++) {
-                    int checkCol = point.x + i;
-                    int checkRow = point.y + j;
-
-                    // Check if selected cell in a field
-                    if (checkCol >= 0 && checkCol < 10 && checkRow >= 0 && checkRow < 10) {
-                        // if in this field exist a ship, we return false
-                        if (shipLocations.contains(new Point(checkCol, checkRow))) {
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-        return true;
     }
 
 
@@ -230,15 +179,20 @@ public class GameField extends JPanel {
                 int x = gameManager.jniLogicManager.borderSize() + col * gameManager.jniLogicManager.cellSize();
                 int y = gameManager.jniLogicManager.borderSize() + row * gameManager.jniLogicManager.cellSize();
 
-                for (Point shipLocation : shipLocations) {
-                    if (shipLocation != null && shipLocation.x == col && shipLocation.y == row) {
+                for (int i = 0; i < gameManager.jniLogicManager.getShipLocationsSize(); i++) {
+                    if (gameManager.jniLogicManager.getShipLocationX(i) == col && gameManager.jniLogicManager.getShipLocationY(i) == row) {
                         graphics2D.setColor(Color.BLUE); // Цвет подсветки
+                        graphics2D.fillRect(x, y, gameManager.jniLogicManager.cellSize(), gameManager.jniLogicManager.cellSize());
+                    }else if(gameManager.jniLogicManager.isDead(i)){
+                        graphics2D.setColor(Color.RED);
                         graphics2D.fillRect(x, y, gameManager.jniLogicManager.cellSize(), gameManager.jniLogicManager.cellSize());
                     }
                 }
-                for (Point projection : projections) {
-                    if (projection != null && projection.x == col && projection.y == row) {
-                        if (gameManager.jniLogicManager.isPlacable()) {
+                for (int i = 0; i < gameManager.jniLogicManager.getShipSize(); i++) {
+                    if (gameManager.jniLogicManager.getShipX(i) == col && gameManager.jniLogicManager.getShipY(i) == row) {
+                        if (placeShips.countShips() == 0) {
+                            graphics2D.setColor(new Color(0,0,0,0));
+                        }else if (gameManager.jniLogicManager.positionValid()) {
                             graphics2D.setColor(new Color(0, 0, 255, 128));
                         } else {
                             graphics2D.setColor(new Color(255, 0, 0, 128));
@@ -264,9 +218,5 @@ public class GameField extends JPanel {
                     5);
         }
 
-    }
-
-    public ArrayList<Point> getShipLocations() {
-        return shipLocations;
     }
 }

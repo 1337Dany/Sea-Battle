@@ -27,11 +27,18 @@ public class JNILogicManager {
     public native void setShipToLand(int val);
     public native void setPlacable(boolean state);
     public native boolean isPlacable();
-    public native void addShip(int x, int y);
-    public native void setupAddShipIndex(int val);
+    public native void addShip(int index, int x, int y);
+    public native int getShipX(int index);
+    public native int getShipY(int index);
+    public native void setShipSize(int size);
     public native boolean positionValid();
     public native void addAll();
     public native int getShipLocationX(int index);
     public native int getShipLocationY(int index);
     public native int getShipLocationsSize();
+    public native int getShipSize();
+    public native boolean contains(int x, int y);
+    public native void kill(int x, int y);
+    public native boolean isDead(int index);
+    public native boolean isEveryoneDead();
 }
