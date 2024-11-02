@@ -40,10 +40,10 @@ public class SeaBattleClient implements NetworkControl {
                 gameManager.addMessageToGameLogs("Opponent is ready");
 
         } else if (serverMessage.contains("Shoot to: ")) {
-            gameManager.hit(
-                    Integer.parseInt(serverMessage.substring(10, 11)),
-                    Integer.parseInt(serverMessage.substring(11, 12))
-            );
+//            gameManager.hit(
+//                    Integer.parseInt(serverMessage.substring(10, 11)),
+//                    Integer.parseInt(serverMessage.substring(11, 12))
+//            );
 
         } else if (serverMessage.contains("miss")) {
             gameManager.amIHitOpponent(false,

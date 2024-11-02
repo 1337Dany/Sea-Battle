@@ -27,4 +27,11 @@ public class JNILogicManager {
     public native void setShipToLand(int val);
     public native void setPlacable(boolean state);
     public native boolean isPlacable();
+    public native void addShip(int x, int y);
+    public native void setupAddShipIndex(int val);
+    public native boolean positionValid();
+    public native void addAll();
+    public native int getShipLocationX(int index);
+    public native int getShipLocationY(int index);
+    public native int getShipLocationsSize();
 }

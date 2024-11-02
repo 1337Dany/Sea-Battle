@@ -111,10 +111,10 @@ public class GameManager {
 
     public void hit(int x, int y) {
         Point attack = new Point(x, y);
-        if (gameField.getShipLocations().contains(attack)/*Put in cpp*/) {
-            networkControl.sendMessage("hit " + x + y);/*Put in cpp*/
+        if (gameField.getShipLocations().contains(attack)) {
+            networkControl.sendMessage("hit " + x + y);
             historyLogs.addHistoryNote("Opponent is hitted your ship!");
-            gameField.getShipLocations().remove(attack);/*Put in cpp*/
+            gameField.getShipLocations().remove(attack);
             if (gameField.getShipLocations().size() == 0) {
                 networkControl.sendMessage("I loose");
                 addMessageToGameLogs("You loose");
