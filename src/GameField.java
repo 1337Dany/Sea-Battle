@@ -37,9 +37,6 @@ public class GameField extends JPanel {
                         }
                     }
                 }
-                for (int i = 0; i < 4; i++) {
-                    System.out.println(gameManager.jniLogicManager.getShipX(i) + " " + gameManager.jniLogicManager.getShipY(i));
-                }
                 placeShips.revalidateLables();
             }
         };
