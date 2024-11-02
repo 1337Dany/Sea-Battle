@@ -33,6 +33,7 @@ public class JNILogicManager {
     public native int getShipToLand();
 
     public native void setShipToLand(int val);
+    public native boolean isPlacable();
 
     public native void addShip(int index, int x, int y);
 

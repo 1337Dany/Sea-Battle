@@ -67,7 +67,7 @@ public class GameManager {
             });
             exit.addActionListener(event -> closeAll());
 
-            boolean isShipsPlaced = false;//Put in cpp
+            boolean isShipsPlaced = false;
             while (true) {
                 if (placeShips.countShips() == 0 && jniLogicManager.isGameStarted()) {
                     jniLogicManager.setGameStart(false);

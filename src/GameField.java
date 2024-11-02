@@ -1,11 +1,8 @@
-import org.w3c.dom.ls.LSOutput;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
 
 public class GameField extends JPanel {
     private final GameManager gameManager;
@@ -39,6 +36,9 @@ public class GameField extends JPanel {
                             gameManager.jniLogicManager.setShipToLand(gameManager.jniLogicManager.getShipToLand() + 1);
                         }
                     }
+                }
+                for (int i = 0; i < 4; i++) {
+                    System.out.println(gameManager.jniLogicManager.getShipX(i) + " " + gameManager.jniLogicManager.getShipY(i));
                 }
                 placeShips.revalidateLables();
             }
@@ -118,8 +118,6 @@ public class GameField extends JPanel {
                 if (placeShips.countShips() == 0) {
                     removeMouseListener(mouseAdapter);
                     removeMouseMotionListener(mouseMotionAdapter);
-                    revalidate();
-                    repaint();
                     this.invalidate();
                     break;
                 }
@@ -170,7 +168,7 @@ public class GameField extends JPanel {
 
                 for (int i = 0; i < gameManager.jniLogicManager.getShipLocationsSize(); i++) {
                     if (gameManager.jniLogicManager.getShipLocationX(i) == col && gameManager.jniLogicManager.getShipLocationY(i) == row) {
-                        graphics2D.setColor(Color.BLUE); // Цвет подсветки
+                        graphics2D.setColor(Color.BLUE);
                         graphics2D.fillRect(x, y, gameManager.jniLogicManager.cellSize(), gameManager.jniLogicManager.cellSize());
                     }
 
@@ -179,7 +177,9 @@ public class GameField extends JPanel {
                     if (gameManager.jniLogicManager.getShipX(i) == col && gameManager.jniLogicManager.getShipY(i) == row) {
                         if (placeShips.countShips() == 0) {
                             graphics2D.setColor(new Color(0, 0, 0, 0));
-                        } else if (gameManager.jniLogicManager.positionValid()) {
+                        }
+                        if (gameManager.jniLogicManager.isPlacable()) {
+                            System.out.println(gameManager.jniLogicManager.getShipLocationX(i));
                             graphics2D.setColor(new Color(0, 0, 255, 128));
                         } else {
                             graphics2D.setColor(new Color(255, 0, 0, 128));
@@ -190,7 +190,7 @@ public class GameField extends JPanel {
 
                 for (int i = 0; i < gameManager.jniLogicManager.getDeadShipsSize(); i++) {
                     graphics2D.setColor(Color.RED);
-                    if(gameManager.jniLogicManager.getDeadShipX(i) == col && gameManager.jniLogicManager.getDeadShipY(i) == row){
+                    if (gameManager.jniLogicManager.getDeadShipX(i) == col && gameManager.jniLogicManager.getDeadShipY(i) == row) {
                         graphics2D.fillRect(x, y, gameManager.jniLogicManager.cellSize(), gameManager.jniLogicManager.cellSize());
                     }
                 }
