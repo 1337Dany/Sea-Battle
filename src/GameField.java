@@ -1,3 +1,5 @@
+import org.w3c.dom.ls.LSOutput;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -27,18 +29,8 @@ public class GameField extends JPanel {
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Проверяем, что клик попал в границы сетки
-                int adjX = e.getX() - gameManager.jniLogicManager.borderSize();
-                int adjY = e.getY() - gameManager.jniLogicManager.borderSize();
-
-                int col = adjX / gameManager.jniLogicManager.cellSize();
-                int row = adjY / gameManager.jniLogicManager.cellSize();
-
-                System.out.println(gameManager.jniLogicManager.getShipSize());
 
                 if (gameManager.jniLogicManager.getNavy(gameManager.jniLogicManager.getShipToLand()) > 0) {
-
-                    System.out.println(gameManager.jniLogicManager.positionValid());
 
                     if (gameManager.jniLogicManager.positionValid()) {
                         gameManager.jniLogicManager.addAll();
@@ -56,61 +48,58 @@ public class GameField extends JPanel {
         MouseMotionAdapter mouseMotionAdapter = new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                int adjX = e.getX() - gameManager.jniLogicManager.borderSize();
-                int adjY = e.getY() - gameManager.jniLogicManager.borderSize();
-
-                int col = adjX / gameManager.jniLogicManager.cellSize();
-                int row = adjY / gameManager.jniLogicManager.cellSize();
+                int col = gameManager.jniLogicManager.calculateCol(e.getX());
+                int row = gameManager.jniLogicManager.calculateCol(e.getY());
 
                 if (col >= 0 && col < 10 && row >= 0 && row < 10) {
-                    gameManager.jniLogicManager.addShip(0,col,row);
-                    gameManager.jniLogicManager.addShip(1,col,row);
-                    gameManager.jniLogicManager.addShip(2,col,row);
-                    gameManager.jniLogicManager.addShip(3,col,row);
+                    gameManager.jniLogicManager.addShip(0, col, row);
+                    gameManager.jniLogicManager.addShip(1, col, row);
+                    gameManager.jniLogicManager.addShip(2, col, row);
+                    gameManager.jniLogicManager.addShip(3, col, row);
                     gameManager.jniLogicManager.setShipSize(0);
                     if (gameManager.jniLogicManager.isRotated()) {
                         switch (gameManager.jniLogicManager.getShipToLand()) {
                             case 0 -> {
-                                gameManager.jniLogicManager.addShip(0,col, row);
-                                gameManager.jniLogicManager.addShip(1,col, row - 1);
-                                gameManager.jniLogicManager.addShip(2,col, row - 2);
-                                gameManager.jniLogicManager.addShip(3,col, row - 3);
+                                gameManager.jniLogicManager.addShip(0, col, row);
+                                gameManager.jniLogicManager.addShip(1, col, row - 1);
+                                gameManager.jniLogicManager.addShip(2, col, row - 2);
+                                gameManager.jniLogicManager.addShip(3, col, row - 3);
                             }
                             case 1 -> {
-                                gameManager.jniLogicManager.addShip(0,col, row);
-                                gameManager.jniLogicManager.addShip(1,col, row - 1);
-                                gameManager.jniLogicManager.addShip(2,col, row - 2);
+                                gameManager.jniLogicManager.addShip(0, col, row);
+                                gameManager.jniLogicManager.addShip(1, col, row - 1);
+                                gameManager.jniLogicManager.addShip(2, col, row - 2);
                             }
                             case 2 -> {
-                                gameManager.jniLogicManager.addShip(0,col, row);
-                                gameManager.jniLogicManager.addShip(1,col, row - 1);
+                                gameManager.jniLogicManager.addShip(0, col, row);
+                                gameManager.jniLogicManager.addShip(1, col, row - 1);
                             }
                             case 3 -> {
-                                gameManager.jniLogicManager.addShip(0,col, row);
+                                gameManager.jniLogicManager.addShip(0, col, row);
                             }
                         }
                     } else {
                         switch (gameManager.jniLogicManager.getShipToLand()) {
                             case 0 -> {
-                                gameManager.jniLogicManager.addShip(0,col, row);
-                                gameManager.jniLogicManager.addShip(1,col - 1, row);
-                                gameManager.jniLogicManager.addShip(2,col - 2, row);
-                                gameManager.jniLogicManager.addShip(3,col - 3, row);
+                                gameManager.jniLogicManager.addShip(0, col, row);
+                                gameManager.jniLogicManager.addShip(1, col - 1, row);
+                                gameManager.jniLogicManager.addShip(2, col - 2, row);
+                                gameManager.jniLogicManager.addShip(3, col - 3, row);
                                 gameManager.jniLogicManager.setShipSize(4);
                             }
                             case 1 -> {
-                                gameManager.jniLogicManager.addShip(0,col, row);
-                                gameManager.jniLogicManager.addShip(1,col - 1, row);
-                                gameManager.jniLogicManager.addShip(2,col - 2, row);
+                                gameManager.jniLogicManager.addShip(0, col, row);
+                                gameManager.jniLogicManager.addShip(1, col - 1, row);
+                                gameManager.jniLogicManager.addShip(2, col - 2, row);
                                 gameManager.jniLogicManager.setShipSize(3);
                             }
                             case 2 -> {
-                                gameManager.jniLogicManager.addShip(0,col, row);
-                                gameManager.jniLogicManager.addShip(1,col - 1, row);
+                                gameManager.jniLogicManager.addShip(0, col, row);
+                                gameManager.jniLogicManager.addShip(1, col - 1, row);
                                 gameManager.jniLogicManager.setShipSize(2);
                             }
                             case 3 -> {
-                                gameManager.jniLogicManager.addShip(0,col, row);
+                                gameManager.jniLogicManager.addShip(0, col, row);
                                 gameManager.jniLogicManager.setShipSize(1);
                             }
                         }
@@ -183,20 +172,25 @@ public class GameField extends JPanel {
                     if (gameManager.jniLogicManager.getShipLocationX(i) == col && gameManager.jniLogicManager.getShipLocationY(i) == row) {
                         graphics2D.setColor(Color.BLUE); // Цвет подсветки
                         graphics2D.fillRect(x, y, gameManager.jniLogicManager.cellSize(), gameManager.jniLogicManager.cellSize());
-                    }else if(gameManager.jniLogicManager.isDead(i)){
-                        graphics2D.setColor(Color.RED);
-                        graphics2D.fillRect(x, y, gameManager.jniLogicManager.cellSize(), gameManager.jniLogicManager.cellSize());
                     }
+
                 }
                 for (int i = 0; i < gameManager.jniLogicManager.getShipSize(); i++) {
                     if (gameManager.jniLogicManager.getShipX(i) == col && gameManager.jniLogicManager.getShipY(i) == row) {
                         if (placeShips.countShips() == 0) {
-                            graphics2D.setColor(new Color(0,0,0,0));
-                        }else if (gameManager.jniLogicManager.positionValid()) {
+                            graphics2D.setColor(new Color(0, 0, 0, 0));
+                        } else if (gameManager.jniLogicManager.positionValid()) {
                             graphics2D.setColor(new Color(0, 0, 255, 128));
                         } else {
                             graphics2D.setColor(new Color(255, 0, 0, 128));
                         }
+                        graphics2D.fillRect(x, y, gameManager.jniLogicManager.cellSize(), gameManager.jniLogicManager.cellSize());
+                    }
+                }
+
+                for (int i = 0; i < gameManager.jniLogicManager.getDeadShipsSize(); i++) {
+                    graphics2D.setColor(Color.RED);
+                    if(gameManager.jniLogicManager.getDeadShipX(i) == col && gameManager.jniLogicManager.getDeadShipY(i) == row){
                         graphics2D.fillRect(x, y, gameManager.jniLogicManager.cellSize(), gameManager.jniLogicManager.cellSize());
                     }
                 }

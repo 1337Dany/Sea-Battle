@@ -53,7 +53,7 @@ public class GameManager {
         new Thread(() -> {
             ActionListener actionListener = e -> jniLogicManager.setRotated(!jniLogicManager.isRotated());
             rotateShip.addActionListener(actionListener);
-            showEnemyDesk.addActionListener(event -> { //Put in cpp
+            showEnemyDesk.addActionListener(event -> {
                 if (enemyField.isVisible()) {
                     enemyField.setVisible(false);
                     gameField.setVisible(true);
@@ -105,15 +105,15 @@ public class GameManager {
 
     public void shootTo(int x, int y) {
         networkControl.sendMessage("Shoot to: " + x + y);
-        historyLogs.addHistoryNote("Shooting is conducted to " + ((char) (y + 65)) + x/*Put in cpp*/);
+        historyLogs.addHistoryNote("Shooting is conducted to " + ((char) (y + 65)) + x);
         jniLogicManager.setMyTurn(false);
     }
 
     public void hit(int x, int y) {
-        if (jniLogicManager.contains(x,y)) {
+        if (jniLogicManager.contains(x, y)) {
             networkControl.sendMessage("hit " + x + y);
             historyLogs.addHistoryNote("Opponent is hitted your ship!");
-            jniLogicManager.kill(x,y);
+            jniLogicManager.kill(x, y);
             if (jniLogicManager.isEveryoneDead()) {
                 networkControl.sendMessage("I loose");
                 addMessageToGameLogs("You loose");
@@ -128,10 +128,10 @@ public class GameManager {
 
     public void amIHitOpponent(boolean bool, int x, int y) {
         if (bool) {
-            enemyField.getShipLocations().add(new Point(x, y));/*Put in cpp*/
+            jniLogicManager.addKilledShip(x, y);
             historyLogs.addHistoryNote("Field " + ((char) (y + 65)) + x + " is hitted");
         } else {
-            enemyField.getOpenedLocations().add(new Point(x, y));/*Put in cpp*/
+            jniLogicManager.addOpenLocation(x, y);
             historyLogs.addHistoryNote("Field " + ((char) (y + 65)) + x + " is empty");
         }
     }
@@ -264,7 +264,9 @@ public class GameManager {
         return window;
     }
 
-    public JNILogicManager getJniLogicManager(){return jniLogicManager;}
+    public JNILogicManager getJniLogicManager() {
+        return jniLogicManager;
+    }
 
     public void setOpponentState(boolean opponentState) {
         jniLogicManager.setGameStart(opponentState);

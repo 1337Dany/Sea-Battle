@@ -8,19 +8,12 @@ import java.util.ArrayList;
 public class EnemyField extends JPanel {
     private final GameManager gameManager;
 
-    private final ArrayList<Point> shipLocations = new ArrayList<>();
-
-    private final ArrayList<Point> openedLocations = new ArrayList<>();
-
     private Point projection;
 
-    private final int borderSize = 40;
-    private final int cellSize;
 
     EnemyField(GameManager gameManager) {
         this.gameManager = gameManager;
         this.setBounds(0, 0, 650, 650);
-        cellSize = ((this.getWidth() - (borderSize * 2)) / 10);
         SettingsSetter.ignoreSettingParametersToObjects(this);
         this.setBackground(Color.DARK_GRAY);
         gameManager.getWindow().add(this);
@@ -33,11 +26,8 @@ public class EnemyField extends JPanel {
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                int adjX = e.getX() - borderSize;
-                int adjY = e.getY() - borderSize;
-
-                int col = adjX / cellSize;
-                int row = adjY / cellSize;
+                int col = gameManager.jniLogicManager.calculateCol(e.getX());
+                int row = gameManager.jniLogicManager.calculateCol(e.getY());
 
                 if (col >= 0 && col < 10 && row >= 0 && row < 10) {
                     projection = new Point(col, row);
@@ -52,11 +42,8 @@ public class EnemyField extends JPanel {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int adjX = e.getX() - borderSize;
-                int adjY = e.getY() - borderSize;
-
-                int col = adjX / cellSize;
-                int row = adjY / cellSize;
+                int col = gameManager.jniLogicManager.calculateCol(e.getX());
+                int row = gameManager.jniLogicManager.calculateCol(e.getY());
 
                 if (col >= 0 && col < 10 && row >= 0 && row < 10) {
                     if (gameManager.isMyTurn()) {
@@ -70,21 +57,16 @@ public class EnemyField extends JPanel {
     }
 
     private boolean placable(Point projection) {
-        for (Point shipLocation : shipLocations) {
-            if (shipLocation != null) {
-                if (projection.x == shipLocation.x && projection.y == shipLocation.y) {
+        for (int i = 0; i < gameManager.jniLogicManager.getKilledShipsSize(); i++) {
+                if (projection.x == gameManager.jniLogicManager.getKilledShipX(i) && projection.y == gameManager.jniLogicManager.getKilledShipY(i)) {
                     return false;
                 }
-            }
         }
-        for (Point checkPoint : openedLocations) {
-            if (checkPoint != null) {
-                if (projection.x == checkPoint.x && projection.y == checkPoint.y) {
+        for (int i = 0; i < gameManager.jniLogicManager.getOpenedLocationSize(); i++) {
+                if (projection.x == gameManager.jniLogicManager.getOpenLocationX(i) && projection.y == gameManager.jniLogicManager.getOpenLocationY(i)) {
                     return false;
                 }
-            }
         }
-
         return true;
     }
 
@@ -96,39 +78,39 @@ public class EnemyField extends JPanel {
 
         graphics2D.setColor(Color.BLACK);
         graphics2D.fillRect(
-                borderSize,
-                borderSize,
-                this.getWidth() - borderSize * 2,
-                this.getHeight() - borderSize * 2);
+                gameManager.jniLogicManager.borderSize(),
+                gameManager.jniLogicManager.borderSize(),
+                this.getWidth() - gameManager.jniLogicManager.borderSize() * 2,
+                this.getHeight() - gameManager.jniLogicManager.borderSize() * 2);
 
         graphics2D.setColor(Color.WHITE);
         graphics2D.setFont(getFont().deriveFont(20.0f));
         for (int i = 1; i <= 10; i++) {
             graphics2D.drawString(String.valueOf((i - 1)),
-                    ((this.getWidth() - borderSize) / 11) * i + graphics2D.getFontMetrics().stringWidth(String.valueOf(i)),
+                    ((this.getWidth() - gameManager.jniLogicManager.borderSize()) / 11) * i + graphics2D.getFontMetrics().stringWidth(String.valueOf(i)),
                     18);
             char ch = (char) (i + 64);
             graphics2D.drawString(String.valueOf(ch),
                     4,
-                    ((this.getHeight() - borderSize / 2) / 11) * i + borderSize / 2);
+                    ((this.getHeight() - gameManager.jniLogicManager.borderSize() / 2) / 11) * i + gameManager.jniLogicManager.borderSize() / 2);
         }
 
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
-                int x = borderSize + col * cellSize;
-                int y = borderSize + row * cellSize;
+                int x = gameManager.jniLogicManager.borderSize() + col * gameManager.jniLogicManager.cellSize();
+                int y = gameManager.jniLogicManager.borderSize() + row * gameManager.jniLogicManager.cellSize();
 
-                for (Point shipLocation : shipLocations) {
-                    if (shipLocation != null && shipLocation.x == col && shipLocation.y == row) {
+                for (int i = 0; i < gameManager.jniLogicManager.getKilledShipsSize(); i++) {
+                    if (gameManager.jniLogicManager.getKilledShipX(i)== col && gameManager.jniLogicManager.getKilledShipY(i)== row) {
                         graphics2D.setColor(Color.BLUE);
-                        graphics2D.fillRect(x, y, cellSize, cellSize);
+                        graphics2D.fillRect(x, y, gameManager.jniLogicManager.cellSize(), gameManager.jniLogicManager.cellSize());
                     }
                 }
 
-                for (Point emptyLocation : openedLocations) {
-                    if (emptyLocation != null && emptyLocation.x == col && emptyLocation.y == row) {
+                for (int i = 0; i < gameManager.jniLogicManager.getOpenedLocationSize(); i++) {
+                    if (gameManager.jniLogicManager.getOpenLocationX(i) == col && gameManager.jniLogicManager.getOpenLocationY(i) == row) {
                         graphics2D.setColor(Color.RED);
-                        graphics2D.fillRect(x, y, cellSize, cellSize);
+                        graphics2D.fillRect(x, y, gameManager.jniLogicManager.cellSize(), gameManager.jniLogicManager.cellSize());
                     }
                 }
 
@@ -138,7 +120,7 @@ public class EnemyField extends JPanel {
                     } else {
                         graphics2D.setColor(new Color(255, 0, 0, 128));
                     }
-                    graphics2D.fillRect(x, y, cellSize, cellSize);
+                    graphics2D.fillRect(x, y, gameManager.jniLogicManager.cellSize(), gameManager.jniLogicManager.cellSize());
                 }
 
             }
@@ -147,24 +129,16 @@ public class EnemyField extends JPanel {
         graphics2D.setColor(Color.ORANGE);
         for (int i = 1; i <= 9; i++) {
             graphics2D.fillRect(
-                    ((this.getWidth() - borderSize * 2) / 10 * i) + borderSize,
-                    borderSize,
+                    ((this.getWidth() - gameManager.jniLogicManager.borderSize() * 2) / 10 * i) + gameManager.jniLogicManager.borderSize(),
+                    gameManager.jniLogicManager.borderSize(),
                     5,
-                    this.getHeight() - borderSize * 2);
+                    this.getHeight() - gameManager.jniLogicManager.borderSize() * 2);
             graphics.fillRect(
-                    borderSize,
-                    ((this.getHeight() - (borderSize * 2)) / 10 * i) + borderSize,
-                    this.getWidth() - borderSize * 2,
+                    gameManager.jniLogicManager.borderSize(),
+                    ((this.getHeight() - (gameManager.jniLogicManager.borderSize() * 2)) / 10 * i) + gameManager.jniLogicManager.borderSize(),
+                    this.getWidth() - gameManager.jniLogicManager.borderSize() * 2,
                     5);
         }
 
-    }
-
-    public ArrayList<Point> getShipLocations() {
-        return shipLocations;
-    }
-
-    public ArrayList<Point> getOpenedLocations() {
-        return openedLocations;
     }
 }
