@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class PlaceShips extends JPanel {
     private final GameManager gameManager;
 
-    private final ArrayList<Integer> navy = new ArrayList<>();
     private final JLabel linkors = new JLabel();
     private final JLabel cruisers = new JLabel();
     private final JLabel destroyer = new JLabel();
@@ -18,18 +17,14 @@ public class PlaceShips extends JPanel {
     }
 
     private void createNavy() {
-        navy.add(1);  // linkors
-        navy.add(2);  // cruiser
-        navy.add(3);  // destroyer
-        navy.add(4);  // submarines
+        gameManager.jniLogicManager.setNavy(0,1);  // linkors
+        gameManager.jniLogicManager.setNavy(1,2);  // cruiser
+        gameManager.jniLogicManager.setNavy(2,3);  // destroyer
+        gameManager.jniLogicManager.setNavy(3,4);  // submarines
     }
 
     public int countShips() {
-        int result = 0;
-        for (Integer integer : navy) {
-            result += integer;
-        }
-        return result;
+        return gameManager.jniLogicManager.countShips();
     }
 
 
@@ -83,10 +78,10 @@ public class PlaceShips extends JPanel {
     }
 
     public void revalidateLables() {
-        linkors.setText("Linkors: " + navy.get(0));
-        cruisers.setText("Cruisers: " + navy.get(1));
-        destroyer.setText("Destroyer: " + navy.get(2));
-        submarines.setText("Submarines: " + navy.get(3));
+        linkors.setText("Linkors: " + gameManager.jniLogicManager.getNavy(0));
+        cruisers.setText("Cruisers: " + gameManager.jniLogicManager.getNavy(1));
+        destroyer.setText("Destroyer: " + gameManager.jniLogicManager.getNavy(2));
+        submarines.setText("Submarines: " + gameManager.jniLogicManager.getNavy(3));
     }
 
     @Override
@@ -108,9 +103,5 @@ public class PlaceShips extends JPanel {
                 strokeWidth, 10,
                 this.getWidth() - strokeWidth * 2, this.getHeight() - strokeWidth * 2,
                 arc, arc);
-    }
-
-    public ArrayList<Integer> getNavy() {
-        return navy;
     }
 }

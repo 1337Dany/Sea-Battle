@@ -17,11 +17,7 @@ public class GameManager {
     private final JButton rotateShip = new JButton("Rotate");
     private final JButton showEnemyDesk = new JButton("Show enemy desk");
     private final JButton exit = new JButton("Surrender looser");
-    private final NetworkControl networkControl; //Put in cpp
-
-    private boolean gameStarted = false; //Put in cpp
-
-    private boolean myTurn; //Put in cpp
+    private final NetworkControl networkControl;
 
     GameManager(SeaBattleServer networkControl, JFrame window, JPanel menuPanel) {
         this.networkControl = networkControl;
@@ -29,10 +25,10 @@ public class GameManager {
         this.menuPanel = menuPanel;
         jniLogicManager = new JNILogicManager();
 
-        startGame(); //Put in cpp
-        networkControl.setGameManager(this);//Put in cpp
-        networkControl.connect();//Put in cpp
-        myTurn = true;//Put in cpp
+        startGame();
+        networkControl.setGameManager(this);
+        networkControl.connect();
+        jniLogicManager.setMyTurn(true);
     }
 
     GameManager(SeaBattleClient networkControl, JFrame window, JPanel menuPanel) {
@@ -41,10 +37,10 @@ public class GameManager {
         this.menuPanel = menuPanel;
         jniLogicManager = new JNILogicManager();
 
-        startGame();//Put in cpp
-        networkControl.setGameManager(this);//Put in cpp
-        networkControl.connect();//Put in cpp
-        myTurn = false;//Put in cpp
+        startGame();
+        networkControl.setGameManager(this);
+        networkControl.connect();
+        jniLogicManager.setMyTurn(false);
     }
 
     private void startGame() {
@@ -73,8 +69,8 @@ public class GameManager {
 
             boolean isShipsPlaced = false;//Put in cpp
             while (true) {
-                if (placeShips.countShips()/*Put in cpp*/ == 0 && gameStarted) {
-                    gameStarted = false;//Put in cpp
+                if (placeShips.countShips() == 0 && jniLogicManager.isGameStarted()) {
+                    jniLogicManager.setGameStart(false);
                     buttonPanel.add(showEnemyDesk);
                     buttonPanel.repaint();
                     gameLogs.addMessage("Game is starting!");
@@ -110,7 +106,7 @@ public class GameManager {
     public void shootTo(int x, int y) {
         networkControl.sendMessage("Shoot to: " + x + y);
         historyLogs.addHistoryNote("Shooting is conducted to " + ((char) (y + 65)) + x/*Put in cpp*/);
-        myTurn = false;
+        jniLogicManager.setMyTurn(false);
     }
 
     public void hit(int x, int y) {
@@ -128,7 +124,7 @@ public class GameManager {
             networkControl.sendMessage("miss " + x + y);
             historyLogs.addHistoryNote("Opponent is missed!");
         }
-        myTurn = true;
+        jniLogicManager.setMyTurn(true);
     }
 
     public void amIHitOpponent(boolean bool, int x, int y) {
@@ -272,10 +268,10 @@ public class GameManager {
     public JNILogicManager getJniLogicManager(){return jniLogicManager;}
 
     public void setOpponentState(boolean opponentState) {
-        gameStarted = opponentState;
+        jniLogicManager.setGameStart(opponentState);
     }
 
     public boolean isMyTurn() {
-        return myTurn;
+        return jniLogicManager.isMyTurn();
     }
 }

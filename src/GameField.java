@@ -8,13 +8,8 @@ import java.util.ArrayList;
 public class GameField extends JPanel {
     private final GameManager gameManager;
     private final PlaceShips placeShips;
-    private final int borderSize = 40;
-    private int cellSize;
 
     private final ArrayList<Point> shipLocations = new ArrayList<>();
-
-    private int shipToLand = 0;
-    private boolean placable = true;
     private final ArrayList<Point> projections = new ArrayList<>();
 
     GameField(PlaceShips placeShips, GameManager gameManager) {
@@ -28,7 +23,6 @@ public class GameField extends JPanel {
     public void drawField() {
         gameManager.getWindow().add(this);
         this.setBounds(0, 0, 650, 650);
-        cellSize = ((this.getWidth() - (borderSize * 2)) / 10);
         revalidate();
     }
 
@@ -37,17 +31,17 @@ public class GameField extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Проверяем, что клик попал в границы сетки
-                int adjX = e.getX() - borderSize;
-                int adjY = e.getY() - borderSize;
+                int adjX = e.getX() - gameManager.jniLogicManager.borderSize();
+                int adjY = e.getY() - gameManager.jniLogicManager.borderSize();
 
-                int col = adjX / cellSize;
-                int row = adjY / cellSize;
+                int col = adjX / gameManager.jniLogicManager.cellSize();
+                int row = adjY / gameManager.jniLogicManager.cellSize();
 
                 ArrayList<Point> ship = new ArrayList<>();
 
-                if (placeShips.getNavy().get(shipToLand) > 0) {
-                    if (gameManager.jniLogicManager.isRotated()){
-                        switch (shipToLand) {
+                if (gameManager.jniLogicManager.getNavy(gameManager.jniLogicManager.getShipToLand()) > 0) {
+                    if (gameManager.jniLogicManager.isRotated()) {
+                        switch (gameManager.jniLogicManager.getShipToLand()) {
                             case 0 -> {
                                 ship.add(new Point(col, row));
                                 ship.add(new Point(col, row - 1));
@@ -65,8 +59,8 @@ public class GameField extends JPanel {
                             }
                             case 3 -> ship.add(new Point(col, row));
                         }
-                    } else{
-                        switch (shipToLand) {
+                    } else {
+                        switch (gameManager.jniLogicManager.getShipToLand()) {
                             case 0 -> {
                                 ship.add(new Point(col, row));
                                 ship.add(new Point(col - 1, row));
@@ -88,9 +82,9 @@ public class GameField extends JPanel {
 
                     if (positionValid(ship)) {
                         shipLocations.addAll(ship);
-                        placeShips.getNavy().set(shipToLand, placeShips.getNavy().get(shipToLand) - 1);
-                        if (placeShips.getNavy().get(shipToLand) == 0) {
-                            shipToLand++;
+                        gameManager.jniLogicManager.setNavy(gameManager.jniLogicManager.getShipToLand(), gameManager.jniLogicManager.getNavy(gameManager.jniLogicManager.getShipToLand()) - 1);
+                        if (gameManager.jniLogicManager.getNavy(gameManager.jniLogicManager.getShipToLand()) == 0) {
+                            gameManager.jniLogicManager.setShipToLand(gameManager.jniLogicManager.getShipToLand() + 1);
                         }
                     }
                 }
@@ -102,16 +96,16 @@ public class GameField extends JPanel {
         MouseMotionAdapter mouseMotionAdapter = new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                int adjX = e.getX() - borderSize;
-                int adjY = e.getY() - borderSize;
+                int adjX = e.getX() - gameManager.jniLogicManager.borderSize();
+                int adjY = e.getY() - gameManager.jniLogicManager.borderSize();
 
-                int col = adjX / cellSize;
-                int row = adjY / cellSize;
+                int col = adjX / gameManager.jniLogicManager.cellSize();
+                int row = adjY / gameManager.jniLogicManager.cellSize();
 
                 if (col >= 0 && col < 10 && row >= 0 && row < 10) {
                     projections.clear();
                     if (gameManager.jniLogicManager.isRotated()) {
-                        switch (shipToLand) {
+                        switch (gameManager.jniLogicManager.getShipToLand()) {
                             case 0 -> {
                                 projections.add(new Point(col, row));
                                 projections.add(new Point(col, row - 1));
@@ -130,7 +124,7 @@ public class GameField extends JPanel {
                             case 3 -> projections.add(new Point(col, row));
                         }
                     } else {
-                        switch (shipToLand) {
+                        switch (gameManager.jniLogicManager.getShipToLand()) {
                             case 0 -> {
                                 projections.add(new Point(col, row));
                                 projections.add(new Point(col - 1, row));
@@ -149,7 +143,7 @@ public class GameField extends JPanel {
                             case 3 -> projections.add(new Point(col, row));
                         }
                     }
-                    placable = positionValid(projections);
+                    gameManager.jniLogicManager.setPlacable(positionValid(projections));
 
                     repaint();
                 } else {
@@ -213,43 +207,43 @@ public class GameField extends JPanel {
 
         graphics2D.setColor(Color.DARK_GRAY);
         graphics2D.fillRect(
-                borderSize,
-                borderSize,
-                this.getWidth() - borderSize * 2,
-                this.getHeight() - borderSize * 2);
+                gameManager.jniLogicManager.borderSize(),
+                gameManager.jniLogicManager.borderSize(),
+                this.getWidth() - gameManager.jniLogicManager.borderSize() * 2,
+                this.getHeight() - gameManager.jniLogicManager.borderSize() * 2);
 
         graphics2D.setColor(Color.WHITE);
         graphics2D.setFont(getFont().deriveFont(20.0f));
         for (int i = 1; i <= 10; i++) {
             graphics2D.drawString(String.valueOf((i - 1)),
-                    ((this.getWidth() - borderSize) / 11) * i + graphics2D.getFontMetrics().stringWidth(String.valueOf(i)),
+                    ((this.getWidth() - gameManager.jniLogicManager.borderSize()) / 11) * i + graphics2D.getFontMetrics().stringWidth(String.valueOf(i)),
                     18);
             char ch = (char) (i + 64);
             graphics2D.drawString(String.valueOf(ch),
                     4,
-                    ((this.getHeight() - borderSize / 2) / 11) * i + borderSize / 2);
+                    ((this.getHeight() - gameManager.jniLogicManager.borderSize() / 2) / 11) * i + gameManager.jniLogicManager.borderSize() / 2);
         }
 
 
         for (int row = 0; row < 10; row++) {
             for (int col = 0; col < 10; col++) {
-                int x = borderSize + col * cellSize;
-                int y = borderSize + row * cellSize;
+                int x = gameManager.jniLogicManager.borderSize() + col * gameManager.jniLogicManager.cellSize();
+                int y = gameManager.jniLogicManager.borderSize() + row * gameManager.jniLogicManager.cellSize();
 
                 for (Point shipLocation : shipLocations) {
                     if (shipLocation != null && shipLocation.x == col && shipLocation.y == row) {
                         graphics2D.setColor(Color.BLUE); // Цвет подсветки
-                        graphics2D.fillRect(x, y, cellSize, cellSize);
+                        graphics2D.fillRect(x, y, gameManager.jniLogicManager.cellSize(), gameManager.jniLogicManager.cellSize());
                     }
                 }
                 for (Point projection : projections) {
                     if (projection != null && projection.x == col && projection.y == row) {
-                        if (placable) {
+                        if (gameManager.jniLogicManager.isPlacable()) {
                             graphics2D.setColor(new Color(0, 0, 255, 128));
                         } else {
                             graphics2D.setColor(new Color(255, 0, 0, 128));
                         }
-                        graphics2D.fillRect(x, y, cellSize, cellSize);
+                        graphics2D.fillRect(x, y, gameManager.jniLogicManager.cellSize(), gameManager.jniLogicManager.cellSize());
                     }
                 }
             }
@@ -259,14 +253,14 @@ public class GameField extends JPanel {
         graphics2D.setColor(Color.ORANGE);
         for (int i = 1; i <= 9; i++) {
             graphics2D.fillRect(
-                    ((this.getWidth() - borderSize * 2) / 10 * i) + borderSize,
-                    borderSize,
+                    ((this.getWidth() - gameManager.jniLogicManager.borderSize() * 2) / 10 * i) + gameManager.jniLogicManager.borderSize(),
+                    gameManager.jniLogicManager.borderSize(),
                     5,
-                    this.getHeight() - borderSize * 2);
+                    this.getHeight() - gameManager.jniLogicManager.borderSize() * 2);
             graphics.fillRect(
-                    borderSize,
-                    ((this.getHeight() - (borderSize * 2)) / 10 * i) + borderSize,
-                    this.getWidth() - borderSize * 2,
+                    gameManager.jniLogicManager.borderSize(),
+                    ((this.getHeight() - (gameManager.jniLogicManager.borderSize() * 2)) / 10 * i) + gameManager.jniLogicManager.borderSize(),
+                    this.getWidth() - gameManager.jniLogicManager.borderSize() * 2,
                     5);
         }
 
