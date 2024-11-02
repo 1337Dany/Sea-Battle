@@ -6,6 +6,11 @@ import java.util.LinkedList;
 
 public class InGameChat extends JPanel {
     private final GameManager gameManager;
+
+    public LinkedList<JLabel> getLabelList() {
+        return labelList;
+    }
+
     private final LinkedList<JLabel> labelList = new LinkedList<>();
     private final JTextArea message = new JTextArea();
 

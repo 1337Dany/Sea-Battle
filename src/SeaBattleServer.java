@@ -27,7 +27,7 @@ public class SeaBattleServer implements NetworkControl {
                     in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     out = new PrintWriter(clientSocket.getOutputStream(), true);
 
-                    if (in.readLine().equals(password) && !userConnected) {/*Put in cpp*/
+                    if (in.readLine().equals(password) && !userConnected) {
                         out.println("accepted");
                         gameManager.addMessageToGameLogs("Client \"" + clientSocket.getInetAddress() + "\" tried to connect.");
 

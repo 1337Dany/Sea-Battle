@@ -7,14 +7,39 @@ public class GameManager {
     private final JFrame window;
     private final JPanel menuPanel;
     private JPanel buttonPanel;
+
+    public GameField getGameField() {
+        return gameField;
+    }
+
     private GameField gameField;
+
+    public EnemyField getEnemyField() {
+        return enemyField;
+    }
+
     private EnemyField enemyField;
     private PlaceShips placeShips;
     private HistoryLogs historyLogs;
+
+    public InGameChat getInGameChat() {
+        return inGameChat;
+    }
+
     private InGameChat inGameChat;
+
+    public GameLogs getGameLogs() {
+        return gameLogs;
+    }
+
     private GameLogs gameLogs;
 
     private final JButton rotateShip = new JButton("Rotate");
+
+    public JButton getShowEnemyDesk() {
+        return showEnemyDesk;
+    }
+
     private final JButton showEnemyDesk = new JButton("Show enemy desk");
     private final JButton exit = new JButton("Surrender looser");
     private final NetworkControl networkControl;
@@ -245,7 +270,7 @@ public class GameManager {
         window.add(buttonPanel);
     }
 
-    private void closeAll() {
+    void closeAll() {
         window.remove(gameField);
         window.remove(placeShips);
         window.remove(buttonPanel);

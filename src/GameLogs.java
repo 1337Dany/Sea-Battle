@@ -4,6 +4,11 @@ import java.util.LinkedList;
 
 public class GameLogs extends JPanel {
     private final GameManager gameManager;
+
+    public LinkedList<JLabel> getLabelList() {
+        return labelList;
+    }
+
     private final LinkedList<JLabel> labelList = new LinkedList<>();
     GameLogs(GameManager gameManager){
         this.gameManager = gameManager;

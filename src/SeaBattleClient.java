@@ -4,7 +4,7 @@ import java.net.*;
 public class SeaBattleClient implements NetworkControl {
     GameManager gameManager;
 
-    private static boolean ipCorrect = false;/*Put in cpp*/
+    private static boolean ipCorrect = false;
     private static Socket socket;
     private static PrintWriter out;
     private static BufferedReader in;
@@ -12,7 +12,7 @@ public class SeaBattleClient implements NetworkControl {
     @Override
     public void connect() {
 
-        new Thread(() -> {/*Put in cpp*/
+        new Thread(() -> {
             out.println("I am connecting");
             gameManager.addMessageToGameLogs("----Connection successful----");
             try {
