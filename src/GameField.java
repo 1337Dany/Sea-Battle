@@ -64,18 +64,22 @@ public class GameField extends JPanel {
                                 gameManager.jniLogicManager.addShip(1, col, row - 1);
                                 gameManager.jniLogicManager.addShip(2, col, row - 2);
                                 gameManager.jniLogicManager.addShip(3, col, row - 3);
+                                gameManager.jniLogicManager.setShipSize(4);
                             }
                             case 1 -> {
                                 gameManager.jniLogicManager.addShip(0, col, row);
                                 gameManager.jniLogicManager.addShip(1, col, row - 1);
                                 gameManager.jniLogicManager.addShip(2, col, row - 2);
+                                gameManager.jniLogicManager.setShipSize(3);
                             }
                             case 2 -> {
                                 gameManager.jniLogicManager.addShip(0, col, row);
                                 gameManager.jniLogicManager.addShip(1, col, row - 1);
+                                gameManager.jniLogicManager.setShipSize(2);
                             }
                             case 3 -> {
                                 gameManager.jniLogicManager.addShip(0, col, row);
+                                gameManager.jniLogicManager.setShipSize(1);
                             }
                         }
                     } else {
@@ -118,6 +122,8 @@ public class GameField extends JPanel {
                 if (placeShips.countShips() == 0) {
                     removeMouseListener(mouseAdapter);
                     removeMouseMotionListener(mouseMotionAdapter);
+                    revalidate();
+                    repaint();
                     this.invalidate();
                     break;
                 }
@@ -177,9 +183,7 @@ public class GameField extends JPanel {
                     if (gameManager.jniLogicManager.getShipX(i) == col && gameManager.jniLogicManager.getShipY(i) == row) {
                         if (placeShips.countShips() == 0) {
                             graphics2D.setColor(new Color(0, 0, 0, 0));
-                        }
-                        if (gameManager.jniLogicManager.isPlacable()) {
-                            System.out.println(gameManager.jniLogicManager.getShipLocationX(i));
+                        } else if (gameManager.jniLogicManager.positionValid()) {
                             graphics2D.setColor(new Color(0, 0, 255, 128));
                         } else {
                             graphics2D.setColor(new Color(255, 0, 0, 128));
