@@ -46,7 +46,7 @@ public class GameField extends JPanel {
                 ArrayList<Point> ship = new ArrayList<>();
 
                 if (placeShips.getNavy().get(shipToLand) > 0) {
-                    if (gameManager.isRotated()){
+                    if (gameManager.jniLogicManager.isRotated()){
                         switch (shipToLand) {
                             case 0 -> {
                                 ship.add(new Point(col, row));
@@ -110,7 +110,7 @@ public class GameField extends JPanel {
 
                 if (col >= 0 && col < 10 && row >= 0 && row < 10) {
                     projections.clear();
-                    if (gameManager.isRotated()) {
+                    if (gameManager.jniLogicManager.isRotated()) {
                         switch (shipToLand) {
                             case 0 -> {
                                 projections.add(new Point(col, row));

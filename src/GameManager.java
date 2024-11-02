@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class GameManager {
+    JNILogicManager jniLogicManager;
     private final JFrame window;
     private final JPanel menuPanel;
     private JPanel buttonPanel;
@@ -14,7 +15,6 @@ public class GameManager {
     private GameLogs gameLogs;
 
     private final JButton rotateShip = new JButton("Rotate");
-    private boolean rotated = false; //Put in cpp
     private final JButton showEnemyDesk = new JButton("Show enemy desk");
     private final JButton exit = new JButton("Surrender looser");
     private final NetworkControl networkControl; //Put in cpp
@@ -27,6 +27,8 @@ public class GameManager {
         this.networkControl = networkControl;
         this.window = window;
         this.menuPanel = menuPanel;
+        jniLogicManager = new JNILogicManager();
+
         startGame(); //Put in cpp
         networkControl.setGameManager(this);//Put in cpp
         networkControl.connect();//Put in cpp
@@ -37,6 +39,8 @@ public class GameManager {
         this.networkControl = networkControl;
         this.window = window;
         this.menuPanel = menuPanel;
+        jniLogicManager = new JNILogicManager();
+
         startGame();//Put in cpp
         networkControl.setGameManager(this);//Put in cpp
         networkControl.connect();//Put in cpp
@@ -51,7 +55,7 @@ public class GameManager {
 
     private void manageCore() {
         new Thread(() -> {
-            ActionListener actionListener = e -> rotated = !rotated;
+            ActionListener actionListener = e -> jniLogicManager.setRotated(!jniLogicManager.isRotated());
             rotateShip.addActionListener(actionListener);
             showEnemyDesk.addActionListener(event -> { //Put in cpp
                 if (enemyField.isVisible()) {
@@ -265,9 +269,7 @@ public class GameManager {
         return window;
     }
 
-    public boolean isRotated() {
-        return rotated;
-    }
+    public JNILogicManager getJniLogicManager(){return jniLogicManager;}
 
     public void setOpponentState(boolean opponentState) {
         gameStarted = opponentState;
