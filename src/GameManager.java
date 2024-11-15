@@ -95,7 +95,7 @@ public class GameManager {
             boolean isShipsPlaced = false;
             while (true) {
                 if (placeShips.countShips() == 0 && jniLogicManager.isGameStarted()) {
-                    jniLogicManager.setGameStart(false);
+                    jniLogicManager.setGameStart(false); // to show message only once
                     buttonPanel.add(showEnemyDesk);
                     buttonPanel.repaint();
                     gameLogs.addMessage("Game is starting!");
