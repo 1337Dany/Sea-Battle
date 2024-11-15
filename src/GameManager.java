@@ -36,9 +36,6 @@ public class GameManager {
 
     private final JButton rotateShip = new JButton("Rotate");
 
-    public JButton getShowEnemyDesk() {
-        return showEnemyDesk;
-    }
 
     private final JButton showEnemyDesk = new JButton("Show enemy desk");
     private final JButton exit = new JButton("Surrender looser");
