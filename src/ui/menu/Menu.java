@@ -1,5 +1,7 @@
 package ui.menu;
 
+import domain.SettingsSetter;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,35 +11,36 @@ public class Menu extends JPanel {
     private final JButton host = new JButton("Host");
     private final JButton connect = new JButton("Connect");
     private final JButton exit = new JButton("Exit");
+
+    ConnectionMenu connectionMenu = new ConnectionMenu();
     private boolean isConnectionPanelShown = false;
 
     public Menu(MenuContract contract) {
         this.contract = contract;
 
         configure();
+        configureAdditionalPanels();
         open();
     }
+
     public void open() {
 
-        ConnectionMenu connectionMenu = new ConnectionMenu(menuPanel);
-        SettingsSetter.setParametersToObjects(menuPanel);
-
-        host.addActionListener(e -> {
-            remove(menuPanel);
-            new GameManager(new SeaBattleServer(), this, menuPanel);
-        });
+//        host.addActionListener(e -> {
+//            remove(menuPanel);
+//            new GameManager(new SeaBattleServer(), this, menuPanel);
+//        });
 
         connect.addActionListener(e -> {
             if (!isConnectionPanelShown) {
-                menuPanel.add(connectionMenu);
+                this.add(connectionMenu);
                 repaint();
                 isConnectionPanelShown = true;
             }
 
             if (connectionMenu.isCorrect()) {
-                remove(menuPanel);
+                remove(this);
                 revalidate();
-                new GameManager(new SeaBattleClient(), this, menuPanel);
+                //new GameManager(new SeaBattleClient(), this, menuPanel);
             }
         });
 
@@ -91,5 +94,16 @@ public class Menu extends JPanel {
         this.add(host);
         this.add(connect);
         this.add(exit);
+    }
+
+    private void configureAdditionalPanels() {
+        connectionMenu.setBounds(
+                this.getWidth() / 2 + (int) (0.2 * this.getWidth()),
+                this.getHeight() / 2 - (int) (0.1 * this.getHeight()),
+                (int) (0.25 * this.getWidth()),
+                (int) (0.4 * this.getHeight())
+        );
+
+        connectionMenu.drawPanel();
     }
 }
