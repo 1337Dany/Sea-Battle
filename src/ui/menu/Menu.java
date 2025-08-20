@@ -1,7 +1,5 @@
 package ui.menu;
 
-import domain.SettingsSetter;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -22,7 +20,7 @@ public class Menu extends JPanel {
         configureAdditionalPanels();
         open();
     }
-
+    //test
     public void open() {
 
 //        host.addActionListener(e -> {
